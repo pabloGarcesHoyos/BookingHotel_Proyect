@@ -23,12 +23,12 @@ public class UserController {
         this.conection = new MySQLConnection();
     }
 
-    public void createUsers(int id, String nameUser, String emailUser, String password, String contactDetails, String rol) throws SQLException {
-        String createSQL = "INSERT INTO users(id, nameUser, emailUser, password, contactDetails, rol) VALUES(?, ?, ?, ?, ?, ?)";
+    public void createUsers(int id, String userName, String email, String password, String contactDetails, String rol) throws SQLException {
+        String createSQL = "INSERT INTO users(id, userName, email, password, contactDetails, rol) VALUES(?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(createSQL)) {
             statement.setInt(1, id);
-            statement.setString(2, nameUser);
-            statement.setString(3, emailUser);
+            statement.setString(2, userName);
+            statement.setString(3, email);
             statement.setString(4, password);
             statement.setString(5, contactDetails);
             statement.setString(6, rol);
@@ -52,8 +52,8 @@ public class UserController {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getString("nameUser"));
-                System.out.println(rs.getString("emailUser"));
+                System.out.println(rs.getString("userName"));
+                System.out.println(rs.getString("email"));
             }
         } catch (SQLException e) {
             System.out.println("Error" + e);
@@ -61,11 +61,11 @@ public class UserController {
 
     }
 
-    public void updateUsers(String nameUser, String emailUser, String password, String contactDetails, String rol, int id) throws SQLException {
-        String updateSQL = "UPDATE users SET nameUser = ?, emailUser = ?, password = ?, contactDetails = ?, rol = ? WHERE id = ?;";
+    public void updateUsers(String userName, String email, String password, String contactDetails, String rol, int id) throws SQLException {
+        String updateSQL = "UPDATE users SET userName = ?, email = ?, password = ?, contactDetails = ?, rol = ? WHERE id = ?;";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(updateSQL)) {
-            statement.setString(1, nameUser);
-            statement.setString(2, emailUser);
+            statement.setString(1, userName);
+            statement.setString(2, email);
             statement.setString(3, password);
             statement.setString(4, contactDetails);
             statement.setString(5, rol);
