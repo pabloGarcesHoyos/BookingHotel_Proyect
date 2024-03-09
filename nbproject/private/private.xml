@@ -3,13 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/model/Room.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/model/Booking.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/model/User.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/model/Hotel.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/connect/MySQLConnection.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/controller/UserController.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/UsersView.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/HotelCRUDView.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/controller/UserController.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/ViewInicio.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/model/Booking.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/HotelBrowsingView.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/ViewLogin.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/model/Hotel.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/UsersView.java</file>
         </group>
     </open-files>
 </project-private>
