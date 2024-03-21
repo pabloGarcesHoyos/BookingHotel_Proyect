@@ -44,6 +44,11 @@ public class ViewInicio extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(51, 51, 51));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("BookingHotel");
+        jLabel3.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jLabel3PropertyChange(evt);
+            }
+        });
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 40, 480, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\pablo\\OneDrive\\Escritorio\\Interfaces\\png-transparent-hotel-ligarb-tourism-travel-agency-hotel.png")); // NOI18N
@@ -60,6 +65,11 @@ public class ViewInicio extends javax.swing.JFrame {
         jMenuItem1.setBackground(new java.awt.Color(153, 153, 153));
         jMenuItem1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jMenuItem1.setText(" ✅ Log in");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
@@ -68,6 +78,16 @@ public class ViewInicio extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        ViewLogin login = new ViewLogin();
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jLabel3PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jLabel3PropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel3PropertyChange
 
     /**
      * @param args the command line arguments

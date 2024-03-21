@@ -120,6 +120,11 @@ public class UsersView extends javax.swing.JFrame {
         });
 
         cbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador" }));
+        cbRol.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRolActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 0, 0));
 
@@ -282,6 +287,10 @@ public class UsersView extends javax.swing.JFrame {
     private void jPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordActionPerformed
+
+    private void cbRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRolActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbRolActionPerformed
 
     private void limpiarCampos() {
         txtId.setText("");
