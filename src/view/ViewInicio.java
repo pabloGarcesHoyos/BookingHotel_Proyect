@@ -15,7 +15,8 @@ public class ViewInicio extends javax.swing.JFrame {
      */
     public ViewInicio() {
         initComponents();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(this);
+        
     }
 
     /**
