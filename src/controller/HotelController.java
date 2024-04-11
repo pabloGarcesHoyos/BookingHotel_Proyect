@@ -4,40 +4,39 @@
  */
 package controller;
 
-import java.sql.ResultSet;
 import connect.MySQLConnection;
-import model.User;
-import java.sql.PreparedStatement;
+import model.Hotel;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  *
  * @author Lenovo
  */
-public class UserController {
+public class HotelController {
 
-    private final MySQLConnection conection;
+    private final MySQLConnection connection;
 
-    public UserController() throws SQLException {
-        this.conection = new MySQLConnection();
+    public HotelController() throws SQLException {
+        this.connection = new MySQLConnection();
     }
 
-    public void createUsers(int id, String userName, String email, String password, String contactDetails, String rol) throws SQLException {
-        String createSQL = "INSERT INTO users(id, userName, email, password, contactDetails, rol) VALUES(?, ?, ?, ?, ?, ?)";
+    public void createHotel(int id, String name, String adress, String classification, String amenities, String images) throws SQLException {
+        String createSQL = "INSERT INTO hotel(id, name, adress, classification, amenities, images) VALUES(?,?,?,?,?,?)";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(createSQL)) {
             statement.setInt(1, id);
-            statement.setString(2, userName);
-            statement.setString(3, email);
-            statement.setString(4, password);
-            statement.setString(5, contactDetails);
-            statement.setString(6, rol);
+            statement.setString(2, name);
+            statement.setString(3, adress);
+            statement.setString(4, classification);
+            statement.setString(5, amenities);
+            statement.setString(6, images);
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Insercion exitosa");
             } else {
                 System.out.println("No se pudo insertar los datos");
-
             }
         } catch (SQLException e) {
             System.out.println("Ocurrio un error al realizar la insercion en la base de datos");
@@ -45,29 +44,28 @@ public class UserController {
         }
     }
 
-    public void readUsers(int id) throws  SQLException {
-        String readSQL = "SELECT * FROM users WHERE id = ?";
+    public void readHotel(int id) throws SQLException {
+        String readSQL = "SELECT * FROM hotel WHERE id = ?";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(readSQL)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                System.out.println(rs.getString("userName"));
-                System.out.println(rs.getString("email"));
+                System.out.println(rs.getString("name"));
+                System.out.println(rs.getString("adress"));
             }
         } catch (SQLException e) {
             System.out.println("Error" + e);
         }
-
     }
 
-    public void updateUsers(String userName, String email, String password, String contactDetails, String rol, int id) throws SQLException {
+    public void updateHotel(String name, String adress, String classification, String amenities, String images, int id) {
         String updateSQL = "UPDATE users SET userName = ?, email = ?, password = ?, contactDetails = ?, rol = ? WHERE id = ?;";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(updateSQL)) {
-            statement.setString(1, userName);
-            statement.setString(2, email);
-            statement.setString(3, password);
-            statement.setString(4, contactDetails);
-            statement.setString(5, rol);
+            statement.setString(1, name);
+            statement.setString(2, adress);
+            statement.setString(3, classification);
+            statement.setString(4, amenities);
+            statement.setString(5, images);
             statement.setInt(6, id);
             statement.executeUpdate();
 
@@ -76,7 +74,7 @@ public class UserController {
         }
     }
 
-    public void deleteUsers(int id) throws SQLException {
+    public void deleteHotel(int id) throws SQLException {
         String deleteSQL = "DELETE FROM users WHERE id = ?";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(deleteSQL)) {
             statement.setInt(1, id);
