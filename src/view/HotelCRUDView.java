@@ -4,7 +4,7 @@
  */
 package view;
 
-import controller.UserController;
+import controller.HotelController;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class HotelCRUDView extends javax.swing.JFrame {
 
-    UserController controller;
+    HotelController controller;
 
     /**
      * Creates new form UsersView
@@ -24,7 +24,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
 
-        controller = new UserController();
+        controller = new HotelController();
     }
 
     /**
@@ -50,10 +50,10 @@ public class HotelCRUDView extends javax.swing.JFrame {
         btnUpdate = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         txtId = new javax.swing.JTextField();
-        txtuserName = new javax.swing.JTextField();
-        txtEmail = new javax.swing.JTextField();
-        jPassword = new javax.swing.JPasswordField();
-        txtContactDetails = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
+        txtAdress = new javax.swing.JTextField();
+        txtClassification = new javax.swing.JPasswordField();
+        txtAmenities = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         btCreate1 = new javax.swing.JButton();
@@ -117,9 +117,9 @@ public class HotelCRUDView extends javax.swing.JFrame {
             }
         });
 
-        jPassword.addActionListener(new java.awt.event.ActionListener() {
+        txtClassification.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jPasswordActionPerformed(evt);
+                txtClassificationActionPerformed(evt);
             }
         });
 
@@ -179,14 +179,14 @@ public class HotelCRUDView extends javax.swing.JFrame {
                             .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jLabel5)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(txtuserName, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(122, 122, 122)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtContactDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtAdress, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClassification, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtAmenities, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel4)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
@@ -233,19 +233,19 @@ public class HotelCRUDView extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(txtuserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtClassification, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(20, 20, 20)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(txtContactDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtAmenities, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
@@ -266,16 +266,18 @@ public class HotelCRUDView extends javax.swing.JFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         int id = Integer.parseInt(txtId.getText());
         try {
-            controller.deleteUsers(id);
+            controller.deleteHotel(id);
         } catch (SQLException ex) {
         }
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        String nameUser = txtuserName.getText();
-        String email = txtEmail.getText();
-        String password = jPassword.getText();
-        String contactDetails = txtContactDetails.getText();
+        String name = txtName.getText();
+        String adress = txtAdress.getText();
+        String classification = txtClassification.getText();
+        String amenities = txtAmenities.getText();
+        controller.updateHotel(name, adress, classification, amenities, name, WIDTH);
+
 //        String rol = cbRol.getSelectedItem().toString();
 //        int id = Integer.parseInt(txtId.getText());
 //        try {
@@ -286,24 +288,35 @@ public class HotelCRUDView extends javax.swing.JFrame {
 
     private void btnReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadActionPerformed
         int id = Integer.parseInt(txtId.getText());
-        String username = txtuserName.getText();
-        String email = txtEmail.getText();
-        String password = jPassword.getText();
-        String contactDetaild = txtContactDetails.getText();
-//        String rol = cbRol.getSelectedItem().toString();        
+        String username = txtName.getText();
+        String email = txtAdress.getText();
+        String password = txtClassification.getText();
+        String contactDetaild = txtAmenities.getText();
+        try {
+            controller.readHotel(id);
+//        String rol = cbRol.getSelectedItem().toString();
 //        try {
 //            controller.readUsers(id);
 //        } catch (SQLException ex) {
 //
 //        }
+        } catch (SQLException ex) {
+
+        }
     }//GEN-LAST:event_btnReadActionPerformed
 
     private void btCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCreateActionPerformed
         int id = Integer.parseInt(txtId.getText());
-        String userName = txtuserName.getText();
-        String email = txtEmail.getText();
-        String password = jPassword.getText();
-        String contactDetaild = txtContactDetails.getText();
+        String name = txtName.getText();
+        String adress = txtAdress.getText();
+        String classification = txtClassification.getText();
+        String amenities = txtAmenities.getText();
+        try {
+            controller.createHotel(id, name, adress, classification, amenities, name);
+        } catch (SQLException ex) {
+
+        }
+
 //        String rol = cbRol.getSelectedItem().toString();
 //        limpiarCampos();
 //        try {
@@ -312,9 +325,9 @@ public class HotelCRUDView extends javax.swing.JFrame {
 //        }
     }//GEN-LAST:event_btCreateActionPerformed
 
-    private void jPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordActionPerformed
+    private void txtClassificationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClassificationActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jPasswordActionPerformed
+    }//GEN-LAST:event_txtClassificationActionPerformed
 
     private void btCreate1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCreate1ActionPerformed
         // TODO add your handling code here:
@@ -322,11 +335,11 @@ public class HotelCRUDView extends javax.swing.JFrame {
 
     private void limpiarCampos() {
         txtId.setText("");
-        txtuserName.setText("");
-        txtEmail.setText("");
-        jPassword.setText("");
-        txtContactDetails.setText("");
-        
+        txtName.setText("");
+        txtAdress.setText("");
+        txtClassification.setText("");
+        txtAmenities.setText("");
+
     }
 
     /**
@@ -388,10 +401,10 @@ public class HotelCRUDView extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPasswordField jPassword;
-    private javax.swing.JTextField txtContactDetails;
-    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtAdress;
+    private javax.swing.JTextField txtAmenities;
+    private javax.swing.JPasswordField txtClassification;
     private javax.swing.JTextField txtId;
-    private javax.swing.JTextField txtuserName;
+    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }
