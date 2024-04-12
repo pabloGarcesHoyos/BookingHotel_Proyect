@@ -184,26 +184,26 @@ public class ViewLogin extends javax.swing.JFrame {
     String usuario = txtUsuario.getText();
     String contraseña = new String(txtClave.getPassword());
 
-    try {
-        if ("user".equals(usuario) && "123".equals(contraseña)) {
-            JFrameAdmin ventanaAdmin = new JFrameAdmin(); 
-            ventanaAdmin.setVisible(true);
-            this.setVisible(false);
-        } else {
-            User usuarioLogueado = Database.obtenerUsuarioPorCredenciales(usuario, contraseña);
-
-            if (usuarioLogueado != null) {
-                HotelBrowsingView ventanaCliente = new HotelBrowsingView();
-                ventanaCliente.setVisible(true);
-                this.setVisible(false);
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña inválidos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al intentar ingresar: " + e.getMessage(), "Error de Conexión", JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
+//    try {
+//        if ("user".equals(usuario) && "123".equals(contraseña)) {
+//            JFrameAdmin ventanaAdmin = new JFrameAdmin(); 
+//            ventanaAdmin.setVisible(true);
+//            this.setVisible(false);
+//        } else {
+//            User usuarioLogueado = Database.obtenerUsuarioPorCredenciales(usuario, contraseña);
+//
+//            if (usuarioLogueado != null) {
+//                HotelBrowsingView ventanaCliente = new HotelBrowsingView();
+//                ventanaCliente.setVisible(true);
+//                this.setVisible(false);
+//            } else {
+//                JOptionPane.showMessageDialog(this, "Usuario o contraseña inválidos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
+//            }
+//        }
+//    } catch (Exception e) {
+//        JOptionPane.showMessageDialog(this, "Error al intentar ingresar: " + e.getMessage(), "Error de Conexión", JOptionPane.ERROR_MESSAGE);
+//        e.printStackTrace();
+//    }
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 

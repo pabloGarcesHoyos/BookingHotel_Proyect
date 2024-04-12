@@ -4,12 +4,10 @@
  */
 package controller;
 
-<<<<<<< HEAD
-=======
+
 import java.sql.ResultSet;
 import connect.MySQLConnection;
 import model.User;
->>>>>>> c2d0c1e09ab814d860247bdd4e19cc3589e1fc53
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
