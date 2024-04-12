@@ -251,7 +251,7 @@ public class UsersView extends javax.swing.JFrame {
         String rol = cbRol.getSelectedItem().toString();
         int id = Integer.parseInt(txtId.getText());
         try {
-            controller.updateUsers(nameUser, email, password, contactDetails, rol, id);
+            controller.updateUsers(id, nameUser, email, password, contactDetails);
         } catch (SQLException ex) {
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
@@ -279,7 +279,7 @@ public class UsersView extends javax.swing.JFrame {
         String rol = cbRol.getSelectedItem().toString();
         limpiarCampos();
         try {
-            controller.createUsers(id, userName, email, password, contactDetaild, rol);
+            controller.createUsers(id, userName, email, password, contactDetaild);
         } catch (SQLException ex) {
         }
     }//GEN-LAST:event_btCreateActionPerformed
