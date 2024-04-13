@@ -4,6 +4,7 @@
  */
 package view;
 
+import controller.RoomController;
 import controller.UserController;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
@@ -14,12 +15,13 @@ import java.sql.SQLException;
  */
 public class RoomCRUDView extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ViewRegistroUser
-     */
+    RoomController controller;
+
     public RoomCRUDView() {
         initComponents();
         setLocationRelativeTo(this);
+
+        controller = new RoomController();
     }
 
     /**
@@ -77,12 +79,27 @@ public class RoomCRUDView extends javax.swing.JFrame {
 
         btnBuscar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         cbAvailability.setText("Disponibilidad");
 
@@ -180,9 +197,62 @@ public class RoomCRUDView extends javax.swing.JFrame {
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         int id = Integer.parseInt(txtId.getText());
-        
+        int roomNumber = Integer.parseInt(txtRoomNumber.getText());
+        String roomType = txtRoomType.getText();
+        int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
+        int availability;
+        String amenitiesDetails = txtAmenitiesDetails.getText();
+
+        if (cbAvailability.isSelected()) {
+            availability = 1;
+        } else {
+            availability = 0;
+        }
+
+        try {
+            controller.createRooms(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails);
+        } catch (SQLException ex) {
+        }
 
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+
+        int id = Integer.parseInt(txtId.getText());
+        try {
+            controller.readRooms(id);
+        } catch (SQLException ex) {
+
+        }
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int id = Integer.parseInt(txtId.getText());
+        int roomNumber = Integer.parseInt(txtRoomNumber.getText());
+        String roomType = txtRoomType.getText();
+        int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
+        int availability;
+        String amenitiesDetails = txtAmenitiesDetails.getText();
+
+        if (cbAvailability.isSelected()) {
+            availability = 1;
+        } else {
+            availability = 0;
+        }
+
+        try {
+            controller.updateRooms(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails);
+        } catch (SQLException ex) {
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        int id = Integer.parseInt(txtId.getText());
+        try {
+            controller.deleteRooms(id);
+        } catch (SQLException ex) {
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments

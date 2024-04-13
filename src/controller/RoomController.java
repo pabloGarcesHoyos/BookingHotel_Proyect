@@ -38,43 +38,44 @@ public class RoomController {
         }
     }
 
-    public void readUsers(int id) throws SQLException {
+    public void readRooms(int id) throws SQLException {
         String readSQL = "SELECT * FROM room WHERE id = ?";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(readSQL)) {
             statement.setInt(1, id);
 
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                System.out.println("userName: " + rs.getString("userName"));
-                System.out.println("email: " + rs.getString("email"));
+                System.out.println("roomNumber: " + rs.getString("roomNumber"));
+                System.out.println("availability: " + rs.getString("availability"));
             }
         } catch (SQLException e) {
             System.out.println("Error al leer los usuarios: " + e.getMessage());
         }
     }
 
-    public void updateUsers(int id, int roomNumber, String roomType, int pricePerNight, int availability, String amenitiesDetails) throws SQLException {
-        String updateSQL = "UPDATE room SET roomNumber = ?, roomType = ?, pricePerNight = ?, availability = ?, amenitiesDetails =? WHERE id = ?;";
+    public void updateRooms(int id, int roomNumber, String roomType, int pricePerNight, int availability, String amenitiesDetails) throws SQLException {
+        String updateSQL = "UPDATE room SET roomNumber = ?, roomType = ?, pricePerNight = ?, availability = ?, amenitiesDetails = ? WHERE id = ?;";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(updateSQL)) {
-            statement.setInt(1, id);
-            statement.setInt(2, roomNumber);
-            statement.setString(3, roomType);
-            statement.setInt(4, pricePerNight);
-            statement.setInt(5, availability);
-            statement.setString(6, amenitiesDetails);
+            
+            statement.setInt(1, roomNumber);
+            statement.setString(2, roomType);
+            statement.setInt(3, pricePerNight);
+            statement.setInt(4, availability);
+            statement.setString(5, amenitiesDetails);
+            statement.setInt(6, id);
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Actualización exitosa");
             } else {
-                System.out.println("No se pudo actualizar el usuario");
+                System.out.println("No se pudo actualizar la habitacion");
             }
         } catch (SQLException e) {
             System.out.println("Error al actualizar los usuarios: " + e.getMessage());
         }
     }
 
-    public void deleteUsers(int id) throws SQLException {
+    public void deleteRooms(int id) throws SQLException {
         String deleteSQL = "DELETE FROM room WHERE id = ?";
         try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(deleteSQL)) {
             statement.setInt(1, id);
