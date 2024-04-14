@@ -4,89 +4,91 @@
  */
 package controller;
 
-
-import java.sql.ResultSet;
-import connect.MySQLConnection;
-import model.User;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import connect.MySQLConnection;
+import model.User;
 
 public class UserController {
 
     public UserController() {
     }
 
-    public void createUsers(int id, String userName, String email, String password, String contactDetails) throws SQLException {
-        String createSQL = "INSERT INTO users(id, userName, email, password, contactDetails) VALUES(?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(createSQL)) {
-            statement.setInt(1, id);
-            statement.setString(2, userName);
-            statement.setString(3, email);
-            statement.setString(4, password);
-            statement.setString(5, contactDetails);
+    public void createUsers(String userName, String email, String password, String contactDetails) throws SQLException {
+        String createSQL = "INSERT INTO users(userName, email, password, contactDetails) VALUES(?, ?, SHA2(?, 256), ?)";
+        try (Connection conn = MySQLConnection.conectarMySQL();
+             PreparedStatement statement = conn.prepareStatement(createSQL)) {
+            statement.setString(1, userName);
+            statement.setString(2, email);
+            statement.setString(3, password); 
+            statement.setString(4, contactDetails);
 
             int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Inserción exitosa");
-            } else {
-                System.out.println("No se pudo insertar los datos");
-            }
-        } catch (SQLException e) {
-            System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
+            System.out.println(rowsAffected > 0 ? "Inserción exitosa" : "No se pudo insertar los datos");
         }
     }
 
-    public void readUsers(int id) throws SQLException {
+    public User readUsers(int id) throws SQLException {
         String readSQL = "SELECT * FROM users WHERE id = ?";
-        try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(readSQL)) {
+        try (Connection conn = MySQLConnection.conectarMySQL();
+             PreparedStatement statement = conn.prepareStatement(readSQL)) {
             statement.setInt(1, id);
-
             ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                System.out.println("userName: " + rs.getString("userName"));
-                System.out.println("email: " + rs.getString("email"));
+            if (rs.next()) {
+                return new User(
+                    rs.getInt("id"),
+                    rs.getString("userName"),
+                    rs.getString("email"),
+                    rs.getString("password"), 
+                    rs.getString("contactDetails")
+                );
             }
-        } catch (SQLException e) {
-            System.out.println("Error al leer los usuarios: " + e.getMessage());
         }
+        return null;
     }
 
     public void updateUsers(int id, String userName, String email, String password, String contactDetails) throws SQLException {
-        String updateSQL = "UPDATE users SET userName = ?, email = ?, password = ?, contactDetails = ? WHERE id = ?;";
-        try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(updateSQL)) {
+        String updateSQL = "UPDATE users SET userName = ?, email = ?, password = SHA2(?, 256), contactDetails = ? WHERE id = ?";
+        try (Connection conn = MySQLConnection.conectarMySQL();
+             PreparedStatement statement = conn.prepareStatement(updateSQL)) {
             statement.setString(1, userName);
             statement.setString(2, email);
-            statement.setString(3, password);
+            statement.setString(3, password); 
             statement.setString(4, contactDetails);
             statement.setInt(5, id);
 
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Actualización exitosa");
-            } else {
-                System.out.println("No se pudo actualizar el usuario");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al actualizar los usuarios: " + e.getMessage());
+            System.out.println(statement.executeUpdate() > 0 ? "Actualización exitosa" : "No se pudo actualizar el usuario");
         }
     }
 
     public void deleteUsers(int id) throws SQLException {
         String deleteSQL = "DELETE FROM users WHERE id = ?";
-        try (PreparedStatement statement = MySQLConnection.conectarMySQL().prepareStatement(deleteSQL)) {
+        try (Connection conn = MySQLConnection.conectarMySQL();
+             PreparedStatement statement = conn.prepareStatement(deleteSQL)) {
             statement.setInt(1, id);
-
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Eliminación exitosa");
-            } else {
-                System.out.println("No se pudo eliminar el usuario");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error al eliminar usuarios: " + e.getMessage());
+            System.out.println(statement.executeUpdate() > 0 ? "Eliminación exitosa" : "No se pudo eliminar el usuario");
         }
     }
-}
 
+    public static User obtenerUsuarioPorCredenciales(String usuario, String contraseña) throws SQLException {
+        String query = "SELECT * FROM users WHERE userName = ? AND password = SHA2(?, 256)";
+        try (Connection conn = MySQLConnection.conectarMySQL();
+             PreparedStatement statement = conn.prepareStatement(query)) {
+            statement.setString(1, usuario);
+            statement.setString(2, contraseña);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return new User(
+                    resultSet.getInt("id"),
+                    resultSet.getString("userName"),
+                    resultSet.getString("email"),
+                    resultSet.getString("password"), 
+                    resultSet.getString("contactDetails")
+                );
+            }
+        }
+        return null;
+    }
+}

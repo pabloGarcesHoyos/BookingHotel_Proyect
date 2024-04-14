@@ -7,6 +7,7 @@ package view;
 import controller.UserController;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
+import model.User;
 
 /**
  *
@@ -82,12 +83,27 @@ public class ViewRegistroUser extends javax.swing.JFrame {
 
         btnBuscar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnEliminar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         jLabel6.setText("ID");
@@ -196,30 +212,98 @@ public class ViewRegistroUser extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-    try {
-        int id = Integer.parseInt(txtId.getText());
+try {
         String userName = txtNombre.getText();
         String email = txtCorreo.getText();
-        String password = new String(txtClave.getName());
+        String password = new String(txtClave.getText());
+        String contactDetails = "Detalles adicionales aquí"; 
 
         UserController userController = new UserController();
-        userController.createUsers(id, userName, email, password, email);
+        userController.createUsers(userName, email, password, contactDetails);
 
         JOptionPane.showMessageDialog(this, "Usuario registrado con éxito.", "Registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
 
-        txtId.setText("");
         txtNombre.setText("");
         txtCorreo.setText("");
         txtClave.setText("");
-    } catch (NumberFormatException nfe) {
-        JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID numérico válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
     } catch (SQLException sqlException) {
         JOptionPane.showMessageDialog(this, "Error al registrar el usuario: " + sqlException.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
     } catch (Exception e) {
         JOptionPane.showMessageDialog(this, "Error al registrar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+    
 
     }//GEN-LAST:event_btnRegistrarActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    try {
+        int id = Integer.parseInt(txtId.getText());
+        UserController userController = new UserController();
+        User user = userController.readUsers(id);
+        
+        if (user != null) {
+            txtNombre.setText(user.getUserName());
+            txtCorreo.setText(user.getEmail());
+            txtClave.setText(user.getPassword());
+            JOptionPane.showMessageDialog(this, "Usuario encontrado y cargado.", "Búsqueda Exitosa", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "Usuario no encontrado.", "Búsqueda Fallida", JOptionPane.WARNING_MESSAGE);
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error de base de datos al buscar el usuario: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+    }                                  
+
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+    try {
+        int id = Integer.parseInt(txtId.getText()); 
+        String userName = txtNombre.getText();
+        String email = txtCorreo.getText();
+        String password = new String(txtClave.getText());
+        String contactDetails = "Detalles adicionales aquí"; 
+
+        UserController userController = new UserController();
+        userController.updateUsers(id, userName, email, password, contactDetails);
+
+        JOptionPane.showMessageDialog(this, "Usuario actualizado con éxito.", "Actualización Exitosa", JOptionPane.INFORMATION_MESSAGE);
+    } catch (NumberFormatException nfe) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID numérico válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException sqlException) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar el usuario: " + sqlException.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al actualizar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+      
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+    try {
+        int id = Integer.parseInt(txtId.getText()); 
+
+        int response = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar este usuario?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (response == JOptionPane.YES_OPTION) {
+            UserController userController = new UserController();
+            userController.deleteUsers(id);
+
+            JOptionPane.showMessageDialog(this, "Usuario eliminado con éxito.", "Eliminación Exitosa", JOptionPane.INFORMATION_MESSAGE);
+
+            txtId.setText("");
+            txtNombre.setText("");
+            txtCorreo.setText("");
+            txtClave.setText("");
+        }
+    } catch (NumberFormatException nfe) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID numérico válido.", "Error de Formato", JOptionPane.ERROR_MESSAGE);
+    } catch (SQLException sqlException) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar el usuario: " + sqlException.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al eliminar el usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_btnEliminarActionPerformed
 
     /**
      * @param args the command line arguments

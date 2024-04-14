@@ -5,8 +5,10 @@
 package view;
 
 import Dao.Database;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 import model.User;
+
 
 /**
  *
@@ -89,29 +91,26 @@ public class ViewLogin extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(104, 104, 104)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGap(15, 15, 15)
-                                    .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(57, 57, 57)
-                                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel4)
-                                        .addComponent(jLabel5))
-                                    .addGap(26, 26, 26)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtUsuario)
-                                        .addComponent(txtClave, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)))))))
-                .addGap(83, 83, 83))
+                .addGap(90, 90, 90)
+                .addComponent(jLabel3))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(104, 104, 104)
+                .addComponent(jLabel2))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(jLabel4)
+                .addGap(26, 26, 26)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(90, 90, 90)
+                .addComponent(jLabel5)
+                .addGap(32, 32, 32)
+                .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addComponent(btnIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -120,18 +119,21 @@ public class ViewLogin extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addComponent(jLabel2)
                 .addGap(33, 33, 33)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(31, 31, 31)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnIngresar)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                    .addComponent(jButton2)))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 300));
@@ -184,26 +186,38 @@ public class ViewLogin extends javax.swing.JFrame {
     String usuario = txtUsuario.getText();
     String contraseña = new String(txtClave.getPassword());
 
-//    try {
-//        if ("user".equals(usuario) && "123".equals(contraseña)) {
-//            JFrameAdmin ventanaAdmin = new JFrameAdmin(); 
-//            ventanaAdmin.setVisible(true);
-//            this.setVisible(false);
-//        } else {
-//            User usuarioLogueado = Database.obtenerUsuarioPorCredenciales(usuario, contraseña);
-//
-//            if (usuarioLogueado != null) {
-//                HotelBrowsingView ventanaCliente = new HotelBrowsingView();
-//                ventanaCliente.setVisible(true);
-//                this.setVisible(false);
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Usuario o contraseña inválidos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
-//            }
-//        }
-//    } catch (Exception e) {
-//        JOptionPane.showMessageDialog(this, "Error al intentar ingresar: " + e.getMessage(), "Error de Conexión", JOptionPane.ERROR_MESSAGE);
-//        e.printStackTrace();
-//    }
+    try {
+         if ("admin".equals(usuario) && "123".equals(contraseña)) {
+            abrirVentanaAdmin();
+        } else {
+            iniciarSesionUsuario(usuario, contraseña);
+        }
+    } catch (Exception e) {
+        manejarErrorIngreso(e);
+    }
+}
+
+private void abrirVentanaAdmin() throws SQLException {
+    HotelCRUDView ventanaAdmin = new HotelCRUDView(); 
+    ventanaAdmin.setVisible(true);
+    this.setVisible(false);
+}
+
+private void iniciarSesionUsuario(String usuario, String contraseña) throws SQLException {
+    User usuarioLogueado = Database.obtenerUsuarioPorCredenciales(usuario, contraseña);
+    if (usuarioLogueado != null) {
+        VistaHotelesRegistrados ventanaCliente = new VistaHotelesRegistrados();
+        ventanaCliente.setVisible(true);
+        this.setVisible(false);
+    } else {
+        JOptionPane.showMessageDialog(this, "Usuario o contraseña inválidos.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+private void manejarErrorIngreso(Exception e) {
+    JOptionPane.showMessageDialog(this, "Error al intentar ingresar: " + e.getMessage(), "Error de Conexión", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+
 
     }//GEN-LAST:event_btnIngresarActionPerformed
 
