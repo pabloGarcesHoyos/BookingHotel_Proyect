@@ -87,6 +87,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jCheckBoxMenuItem3 = new javax.swing.JCheckBoxMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
@@ -273,6 +274,14 @@ public class HotelCRUDView extends javax.swing.JFrame {
 
         jMenu1.setText("Menu");
 
+        jMenuItem2.setText("Hoteles clientes");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem2);
+
         jCheckBoxMenuItem3.setSelected(true);
         jCheckBoxMenuItem3.setText("Salir");
         jCheckBoxMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -372,6 +381,15 @@ public class HotelCRUDView extends javax.swing.JFrame {
     this.dispose();
     }//GEN-LAST:event_jCheckBoxMenuItem3ActionPerformed
 
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        try {
+            VistaHotelesRegistrados Hoteles = new VistaHotelesRegistrados();
+            Hoteles.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(HotelCRUDView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
     private void limpiarCampos() {
         txtId.setText("");
         txtName.setText("");
@@ -440,6 +458,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

@@ -279,7 +279,7 @@ public class UsersView extends javax.swing.JFrame {
         String rol = cbRol.getSelectedItem().toString();
         limpiarCampos();
         try {
-            controller.createUsers(id, userName, email, password, contactDetaild);
+            controller.createUsers(userName, email, password, contactDetaild);
         } catch (SQLException ex) {
         }
     }//GEN-LAST:event_btCreateActionPerformed
