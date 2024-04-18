@@ -13,19 +13,18 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import javax.swing.JFrame;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import model.Hotel;
 
 public class VistaHotelesRegistrados extends JFrame {
-    HotelController controlH;
+    private HotelController controlH;
     
 
     public VistaHotelesRegistrados() throws SQLException {
@@ -42,12 +41,12 @@ public class VistaHotelesRegistrados extends JFrame {
                     try {
                         int selectedRow = tblHoteles.getSelectedRow();
                         if (selectedRow != -1) { 
-                            String id = tblHoteles.getValueAt(selectedRow, 0).toString();
-                            String nombre = tblHoteles.getValueAt(selectedRow, 1).toString();
-                            String ciudad = tblHoteles.getValueAt(selectedRow, 2).toString();
-                            String precio = tblHoteles.getValueAt(selectedRow, 3).toString();
-                            String clasificacion = tblHoteles.getValueAt(selectedRow, 4).toString();
-                            String comodidades = tblHoteles.getValueAt(selectedRow, 5).toString();
+                            String id = tblHoteles.getValueAt(selectedRow, 0) != null ? tblHoteles.getValueAt(selectedRow, 0).toString() : "";
+                            String nombre = tblHoteles.getValueAt(selectedRow, 1) != null ? tblHoteles.getValueAt(selectedRow, 1).toString() : "";
+                            String ciudad = tblHoteles.getValueAt(selectedRow, 2) != null ? tblHoteles.getValueAt(selectedRow, 2).toString() : "";
+                            String precio = tblHoteles.getValueAt(selectedRow, 3) != null ? tblHoteles.getValueAt(selectedRow, 3).toString() : "";
+                            String clasificacion = tblHoteles.getValueAt(selectedRow, 4) != null ? tblHoteles.getValueAt(selectedRow, 4).toString() : "";
+                            String comodidades = tblHoteles.getValueAt(selectedRow, 5) != null ? tblHoteles.getValueAt(selectedRow, 5).toString() : "";
                             
                             escribirEnArchivo("id.txt", id);
                             escribirEnArchivo("nombre.txt", nombre);
@@ -74,6 +73,12 @@ public class VistaHotelesRegistrados extends JFrame {
 
         jDateChooser2 = new JDateChooser();
         jDateChooser2.setDate(new Date());
+
+        btnReservar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReservarActionPerformed(evt);
+            }
+        });
     }
 
     private void escribirEnArchivo(String nombreArchivo, String texto) throws IOException {
@@ -104,8 +109,7 @@ public class VistaHotelesRegistrados extends JFrame {
 
         tblHoteles.setModel(model);
     }
-
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

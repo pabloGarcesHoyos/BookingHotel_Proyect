@@ -36,6 +36,7 @@ public class HotelController {
             System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
         }
     }
+    
     public boolean verificarDisponibilidad(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         try {
             String sql = "SELECT COUNT(*) FROM reserva WHERE id_hotel = ? AND fecha_entrada <= ? AND fecha_salida >= ?";
@@ -56,18 +57,30 @@ public class HotelController {
         }
     }
 
-
-    public void readHotel(int id) throws SQLException {
-        String readSQL = "SELECT * FROM hotel WHERE id = ?";
-        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(readSQL)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                System.out.println("Nombre: " + rs.getString("name"));
-                System.out.println("Dirección: " + rs.getString("address"));
+    public boolean realizarReserva(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+        try {
+            boolean disponibilidad = verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
+            
+            if (!disponibilidad) {
+                return false;
             }
+
+            String insertSQL = "INSERT INTO reserva (id_hotel, fecha_entrada, fecha_salida) VALUES (?, ?, ?)";
+            try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(insertSQL)) {
+                statement.setString(1, idHotel);
+                statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
+                statement.setDate(3, java.sql.Date.valueOf(fechaSalida));
+                int rowsAffected = statement.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Reserva realizada para el hotel con ID " + idHotel + " desde " + fechaEntrada + " hasta " + fechaSalida);
+                    return true;
+                }
+            }
+
+            return false;
         } catch (SQLException e) {
-            System.out.println("Error al leer datos: " + e.getMessage());
+            System.out.println("Error al realizar la reserva: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -105,20 +118,18 @@ public class HotelController {
             System.out.println("Error al eliminar datos: " + e.getMessage());
         }
     }
-    public boolean realizarReserva(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
-        try {
-            boolean disponibilidad = verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
-            
-            if (!disponibilidad) {
-                return false;
-            }
 
-            System.out.println("Reserva realizada para el hotel con ID " + idHotel + " desde " + fechaEntrada + " hasta " + fechaSalida);
-            
-            return true;
+    public void readHotel(int id) throws SQLException {
+        String readSQL = "SELECT * FROM hotel WHERE id = ?";
+        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(readSQL)) {
+            statement.setInt(1, id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                System.out.println("Nombre: " + rs.getString("name"));
+                System.out.println("Dirección: " + rs.getString("address"));
+            }
         } catch (SQLException e) {
-            System.out.println("Error al realizar la reserva: " + e.getMessage());
-            throw e;
+            System.out.println("Error al leer datos: " + e.getMessage());
         }
     }
 
