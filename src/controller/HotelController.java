@@ -5,6 +5,7 @@ import model.Hotel;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +84,26 @@ public class HotelController {
         } catch (SQLException e) {
             System.out.println("Error al eliminar datos: " + e.getMessage());
         }
+    }
+    public boolean realizarReserva(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+        try {
+            boolean disponibilidad = verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
+            
+            if (!disponibilidad) {
+                return false;
+            }
+
+            System.out.println("Reserva realizada para el hotel con ID " + idHotel + " desde " + fechaEntrada + " hasta " + fechaSalida);
+            
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Error al realizar la reserva: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    private boolean verificarDisponibilidad(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+        return true;
     }
 
     public List<Hotel> getAllHotels() throws SQLException {
