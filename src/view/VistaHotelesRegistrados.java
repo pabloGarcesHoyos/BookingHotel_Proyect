@@ -4,12 +4,14 @@
  */
 package view;
 
+import com.toedter.calendar.JDateChooser;
 import controller.HotelController;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import javax.swing.JFrame;
 import javax.swing.event.ListSelectionEvent;
@@ -18,37 +20,34 @@ import javax.swing.table.DefaultTableModel;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import model.Hotel;
 
 public class VistaHotelesRegistrados extends JFrame {
     HotelController controlH;
+    
 
     public VistaHotelesRegistrados() throws SQLException {
         initComponents();
         setLocationRelativeTo(null);
         this.controlH = new HotelController();
-        
+
         llenarTablaHoteles();
-        
+
         tblHoteles.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
                     try {
                         int selectedRow = tblHoteles.getSelectedRow();
-                        if (selectedRow != -1) { // Asegurarse de que se haya seleccionado una fila
+                        if (selectedRow != -1) { 
                             String id = tblHoteles.getValueAt(selectedRow, 0).toString();
                             String nombre = tblHoteles.getValueAt(selectedRow, 1).toString();
                             String ciudad = tblHoteles.getValueAt(selectedRow, 2).toString();
                             String precio = tblHoteles.getValueAt(selectedRow, 3).toString();
                             String clasificacion = tblHoteles.getValueAt(selectedRow, 4).toString();
                             String comodidades = tblHoteles.getValueAt(selectedRow, 5).toString();
-                            txtId.setText(id);
-                            txtAdreess.setText(ciudad);
-                            txtCiudad.setText(ciudad);
-                            txtPrecio.setText(precio);
-                            txtClasificacion.setText(clasificacion);
                             
                             escribirEnArchivo("id.txt", id);
                             escribirEnArchivo("nombre.txt", nombre);
@@ -56,6 +55,12 @@ public class VistaHotelesRegistrados extends JFrame {
                             escribirEnArchivo("precio.txt", precio);
                             escribirEnArchivo("clasificacion.txt", clasificacion);
                             escribirEnArchivo("comodidades.txt", comodidades);
+                            
+                            txtId.setText(id);
+                            txtAdreess.setText(ciudad);
+                            txtCiudad.setText(ciudad);
+                            txtPrecio.setText(precio);
+                            txtClasificacion.setText(clasificacion);
                         }
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -63,6 +68,12 @@ public class VistaHotelesRegistrados extends JFrame {
                 }
             }
         });
+
+        jDateChooser1 = new JDateChooser();
+        jDateChooser1.setDate(new Date());
+
+        jDateChooser2 = new JDateChooser();
+        jDateChooser2.setDate(new Date());
     }
 
     private void escribirEnArchivo(String nombreArchivo, String texto) throws IOException {
@@ -77,7 +88,7 @@ public class VistaHotelesRegistrados extends JFrame {
         model.setColumnIdentifiers(new Object[]{
             "ID Hotel", "Nombre", "Ciudad", "Precio", "Clasificación", "Comodidades"
         });
-        
+
         ArrayList<Hotel> hoteles = (ArrayList<Hotel>) controlH.getAllHotels();
         hoteles.sort(Comparator.comparing(Hotel::getClassification));
 
@@ -86,7 +97,6 @@ public class VistaHotelesRegistrados extends JFrame {
                 hotel.getId(),
                 hotel.getName(),
                 hotel.getAddress(),
-                
                 hotel.getClassification(),
                 hotel.getAmenities()
             });
@@ -94,8 +104,6 @@ public class VistaHotelesRegistrados extends JFrame {
 
         tblHoteles.setModel(model);
     }
-
-
 
 
     /**
@@ -127,6 +135,7 @@ public class VistaHotelesRegistrados extends JFrame {
         btnReservar = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        jDateChooser2 = new com.toedter.calendar.JDateChooser();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -233,7 +242,9 @@ public class VistaHotelesRegistrados extends JFrame {
                                                 .addGap(101, 192, Short.MAX_VALUE))))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                            .addComponent(jDateChooser2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addGap(31, 31, 31)))))))
                 .addContainerGap())
         );
@@ -264,9 +275,14 @@ public class VistaHotelesRegistrados extends JFrame {
                         .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7)
                         .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtAdreess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAdreess, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(jDateChooser2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(23, 23, 23)
                         .addComponent(txtCiudad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -303,13 +319,27 @@ public class VistaHotelesRegistrados extends JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-            LocalDate fechaActual = LocalDate.now();
-            LocalDate fechaEntrada = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate fechaSalida = fechaEntrada.plusDays(1); // Esto puede cambiar según tus requerimientos
+            LocalDateTime fechaActual = LocalDateTime.now();
+            LocalDate fechaHoy = fechaActual.toLocalDate();
+            
+            LocalDate fechaEntrada = jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            
+            if (fechaEntrada.isBefore(fechaHoy)) {
+                JOptionPane.showMessageDialog(this, "No se puede reservar para una fecha que ya ha pasado.");
+                return;
+            }
+            
+            LocalDate fechaSalida = fechaEntrada.plusDays(1); 
+            
             String idHotel = txtId.getText();
             
+            boolean disponibilidad = controlH.verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
+            if (!disponibilidad) {
+                JOptionPane.showMessageDialog(this, "No se puede reservar en las fechas seleccionadas debido a la disponibilidad.");
+                return;
+            }
+            
             boolean reservaExitosa = controlH.realizarReserva(idHotel, fechaEntrada, fechaSalida);
-
             if (reservaExitosa) {
                 JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente");
             } else {
@@ -333,6 +363,7 @@ public class VistaHotelesRegistrados extends JFrame {
     private javax.swing.JButton btnReservar;
     private javax.swing.JButton jButton2;
     private com.toedter.calendar.JDateChooser jDateChooser1;
+    private com.toedter.calendar.JDateChooser jDateChooser2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

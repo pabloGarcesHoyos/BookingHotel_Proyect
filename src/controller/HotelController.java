@@ -36,6 +36,26 @@ public class HotelController {
             System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
         }
     }
+    public boolean verificarDisponibilidad(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+        try {
+            String sql = "SELECT COUNT(*) FROM reserva WHERE id_hotel = ? AND fecha_entrada <= ? AND fecha_salida >= ?";
+            try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
+                statement.setString(1, idHotel);
+                statement.setDate(2, java.sql.Date.valueOf(fechaSalida));
+                statement.setDate(3, java.sql.Date.valueOf(fechaEntrada));
+                ResultSet resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count == 0;
+                }
+            }
+            return false;
+        } catch (SQLException e) {
+            System.out.println("Error al verificar disponibilidad: " + e.getMessage());
+            throw e;
+        }
+    }
+
 
     public void readHotel(int id) throws SQLException {
         String readSQL = "SELECT * FROM hotel WHERE id = ?";
@@ -100,10 +120,6 @@ public class HotelController {
             System.out.println("Error al realizar la reserva: " + e.getMessage());
             throw e;
         }
-    }
-
-    private boolean verificarDisponibilidad(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
-        return true;
     }
 
     public List<Hotel> getAllHotels() throws SQLException {
