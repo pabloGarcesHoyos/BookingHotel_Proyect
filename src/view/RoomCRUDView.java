@@ -20,6 +20,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
     public RoomCRUDView() {
         initComponents();
         setLocationRelativeTo(this);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
         controller = new RoomController();
     }

@@ -24,13 +24,13 @@ public class Database {
             return null;
         }
 
-        String query = "SELECT * FROM usuarios WHERE nombre_usuario = ? AND contraseña = ?";
+        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, usuario);
             statement.setString(2, contraseña);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
-                    return new User(resultSet.getInt("id"), resultSet.getString("nombre"), 
+                    return new User(resultSet.getInt("id"), resultSet.getString("username"), 
                                     usuario, resultSet.getString("rol"), contraseña);
                 }
             }

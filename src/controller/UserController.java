@@ -16,14 +16,15 @@ public class UserController {
     public UserController() {
     }
 
-    public void createUsers(String userName, String email, String password, String contactDetails) throws SQLException {
-        String createSQL = "INSERT INTO users(userName, email, password, contactDetails) VALUES(?, ?, SHA2(?, 256), ?)";
+    public void createUsers(String userName, String email, String password, String contactDetails, String rol) throws SQLException {
+        String createSQL = "INSERT INTO users(userName, email, password, contactDetails, rol) VALUES(?, ?, ?, ?, ?)";
         try (Connection conn = MySQLConnection.conectarMySQL();
              PreparedStatement statement = conn.prepareStatement(createSQL)) {
             statement.setString(1, userName);
             statement.setString(2, email);
             statement.setString(3, password); 
             statement.setString(4, contactDetails);
+            statement.setString(5, rol);
 
             int rowsAffected = statement.executeUpdate();
             System.out.println(rowsAffected > 0 ? "Inserción exitosa" : "No se pudo insertar los datos");
