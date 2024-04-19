@@ -391,42 +391,50 @@ public class VistaHotelesRegistrados extends JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-            LocalDateTime fechaActual = LocalDateTime.now();
-            LocalDate fechaHoy = fechaActual.toLocalDate();
-            
-            LocalDate fechaEntrada = jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            
-            if (fechaEntrada.isBefore(fechaHoy)) {
-                JOptionPane.showMessageDialog(this, "No se puede reservar para una fecha que ya ha pasado.");
-                return;
-            }
-            
-            LocalDate fechaSalida = fechaEntrada.plusDays(1); 
-            
-            String idHotel = txtId.getText();
-            
-            boolean disponibilidad = controlH.verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
-            if (!disponibilidad) {
-                JOptionPane.showMessageDialog(this, "No se puede reservar en las fechas seleccionadas debido a la disponibilidad.");
-                return;
-            }
-            
-            boolean reservaExitosa = controlH.realizarReserva(idHotel, fechaEntrada, fechaSalida);
-            if (reservaExitosa) {
-                JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, verifique la disponibilidad.");
-            }
-
-            llenarTablaHoteles();
-
-            txtId.setText("");
-        } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrada en el calendario.");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
+        LocalDateTime fechaActual = LocalDateTime.now();
+        LocalDate fechaHoy = fechaActual.toLocalDate();
+        
+        LocalDate fechaEntrada = jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (fechaEntrada.isBefore(fechaHoy)) {
+            JOptionPane.showMessageDialog(this, "No se puede reservar para una fecha que ya ha pasado.");
+            return;
         }
-    
+        
+        LocalDate fechaSalida = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (fechaSalida.isBefore(fechaEntrada)) {
+            JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser menor a la fecha de entrada.");
+            return;
+        }
+        
+        if (fechaSalida.isBefore(fechaHoy)) {
+            JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser una fecha que ya ha pasado.");
+            return;
+        }
+        
+        String idHotel = txtId.getText();
+        
+        boolean disponibilidad = controlH.verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
+        if (!disponibilidad) {
+            JOptionPane.showMessageDialog(this, "No se puede reservar en las fechas seleccionadas debido a la disponibilidad.");
+            return;
+        }
+        
+         boolean reservaExitosa = controlH.realizarReserva(idHotel, fechaEntrada, fechaSalida);
+        if (reservaExitosa) {
+            JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente");
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, verifique la disponibilidad.");
+        }
+
+        llenarTablaHoteles();
+
+        txtId.setText("");
+    } catch (NullPointerException ex) {
+        JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrada en el calendario.");
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
+    }
+
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void txtAdreessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAdreessActionPerformed
