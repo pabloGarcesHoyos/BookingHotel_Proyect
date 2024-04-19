@@ -27,6 +27,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
     public HotelCRUDView() throws SQLException {
         initComponents();
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
         controller = new HotelController();
     }

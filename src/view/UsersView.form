@@ -260,10 +260,8 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbRol">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="1">
-                <StringItem index="0" value="Administrador"/>
-              </StringArray>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="new javax.swing.DefaultComboBoxModel&lt;&gt;(new String[] { &quot;Administrador&quot;, &quot;Cliente&quot; })" type="code"/>
             </Property>
           </Properties>
           <Events>

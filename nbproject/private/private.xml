@@ -3,18 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/HotelCRUDView.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/controller/HotelController.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/ViewRegistroUser.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/VistaHotelesRegistrados.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/ViewLogin.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/controller/RoomController.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/model/Hotel.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/model/User.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/ViewInicio.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/UsersView.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/controller/UserController.java</file>
-            <file>file:/C:/Users/pablo/OneDrive/Escritorio/new%20proyect/BookingHotel_Proyect/src/view/RoomCRUDView.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/UsersHome.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/HotelCRUDView.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/controller/UserController.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/VistaHotelesRegistrados.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/ViewInicio.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/controller/HotelController.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/Dao/Database.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/ViewLogin.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/RoomCRUDView.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/controller/RoomController.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/ViewRegistroUser.java</file>
+            <file>file:/C:/Users/Usuario/Desktop/Proyectosdisenio/BookingHotel_Proyect/src/view/UsersView.java</file>
         </group>
     </open-files>
 </project-private>

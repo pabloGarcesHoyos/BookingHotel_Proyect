@@ -31,6 +31,7 @@ public class VistaHotelesRegistrados extends JFrame {
         initComponents();
         setLocationRelativeTo(null);
         this.controlH = new HotelController();
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
         llenarTablaHoteles();
 

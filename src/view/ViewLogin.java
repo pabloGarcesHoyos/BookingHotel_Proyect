@@ -22,6 +22,7 @@ public class ViewLogin extends javax.swing.JFrame {
     public ViewLogin() {
         initComponents();
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -206,7 +207,7 @@ private void abrirVentanaAdmin() throws SQLException {
 private void iniciarSesionUsuario(String usuario, String contraseña) throws SQLException {
     User usuarioLogueado = Database.obtenerUsuarioPorCredenciales(usuario, contraseña);
     if (usuarioLogueado != null) {
-        VistaHotelesRegistrados ventanaCliente = new VistaHotelesRegistrados();
+        UsersHome ventanaCliente = new UsersHome();
         ventanaCliente.setVisible(true);
         this.setVisible(false);
     } else {

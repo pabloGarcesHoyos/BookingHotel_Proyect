@@ -23,6 +23,7 @@ public class UsersView extends javax.swing.JFrame {
     public UsersView() throws SQLException {
         initComponents();
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
         controller = new UserController();
     }
@@ -119,7 +120,7 @@ public class UsersView extends javax.swing.JFrame {
             }
         });
 
-        cbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador" }));
+        cbRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Cliente" }));
         cbRol.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbRolActionPerformed(evt);
@@ -279,7 +280,7 @@ public class UsersView extends javax.swing.JFrame {
         String rol = cbRol.getSelectedItem().toString();
         limpiarCampos();
         try {
-            controller.createUsers(userName, email, password, contactDetaild);
+            controller.createUsers(userName, email, password, contactDetaild,rol);
         } catch (SQLException ex) {
         }
     }//GEN-LAST:event_btCreateActionPerformed
