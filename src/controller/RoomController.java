@@ -23,7 +23,7 @@ public class RoomController {
     }
 
     public void createRoom(int id, int roomNumber, String roomType, int pricePerNight, int availability, String amenitiesDetails, String hotel) throws SQLException {
-        String createSQL = "INSERT INTO rooms (id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, availability, amenities_details, hotel) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(createSQL)) {
             statement.setInt(1, id);
             statement.setInt(2, roomNumber);
@@ -70,11 +70,11 @@ public class RoomController {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                int roomNumber = rs.getInt("roomNumber");
-                String roomType = rs.getString("roomType");
-                int pricePerNight = rs.getInt("pricePerNight");
+                int roomNumber = rs.getInt("room_number");
+                String roomType = rs.getString("room_type");
+                int pricePerNight = rs.getInt("price_per_night");
                 int availability = rs.getInt("availability");
-                String amenitiesDetails = rs.getString("amenitiesDetails");
+                String amenitiesDetails = rs.getString("amenities_details");
                 String hotel = rs.getString("hotel");
                 return new Room(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel);
             }
@@ -85,7 +85,7 @@ public class RoomController {
     }
 
     public void updateRoom(int id, int roomNumber, String roomType, int pricePerNight, int availability, String amenitiesDetails) throws SQLException {
-        String updateSQL = "UPDATE rooms SET roomNumber = ?, roomType = ?, pricePerNight = ?, availability = ?, amenitiesDetails = ? WHERE id = ?";
+        String updateSQL = "UPDATE rooms SET room_number = ?, room_type = ?, price_per_night = ?, availability = ?, amenities_details = ? WHERE id = ?";
         try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(updateSQL)) {
             statement.setInt(1, roomNumber);
             statement.setString(2, roomType);
@@ -127,11 +127,11 @@ public class RoomController {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                int roomNumber = resultSet.getInt("roomNumber");
-                String roomType = resultSet.getString("roomType");
-                int pricePerNight = resultSet.getInt("pricePerNight");
+                int roomNumber = resultSet.getInt("room_number");
+                String roomType = resultSet.getString("room_type");
+                int pricePerNight = resultSet.getInt("price_per_night");
                 int availability = resultSet.getInt("availability");
-                String amenitiesDetails = resultSet.getString("amenitiesDetails");
+                String amenitiesDetails = resultSet.getString("amenities_details");
                 String hotel = resultSet.getString("hotel");
                 availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel));
             }
@@ -147,11 +147,11 @@ public class RoomController {
         try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                int roomNumber = resultSet.getInt("roomNumber");
-                String roomType = resultSet.getString("roomType");
-                int pricePerNight = resultSet.getInt("pricePerNight");
+                int roomNumber = resultSet.getInt("room_number");
+                String roomType = resultSet.getString("room_type");
+                int pricePerNight = resultSet.getInt("price_per_night");
                 int availability = resultSet.getInt("availability");
-                String amenitiesDetails = resultSet.getString("amenitiesDetails");
+                String amenitiesDetails = resultSet.getString("amenities_details");
                 String hotel = resultSet.getString("hotel");
                 rooms.add(new Room(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel));
             }
@@ -170,10 +170,10 @@ public class RoomController {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
-                int roomNumber = resultSet.getInt("roomNumber");
-                String roomType = resultSet.getString("roomType");
-                double pricePerNight = resultSet.getDouble("pricePerNight");
-                String amenitiesDetails = resultSet.getString("amenitiesDetails");
+                int roomNumber = resultSet.getInt("room_number");
+                String roomType = resultSet.getString("room_type");
+                double pricePerNight = resultSet.getDouble("price_per_night");
+                String amenitiesDetails = resultSet.getString("amenities_details");
                 int hotelId = resultSet.getInt("hotel_id");
                 habitacionesDisponibles.add(new Room(id, roomNumber, roomType, pricePerNight, hotelId, amenitiesDetails, sql));
             }
