@@ -4,10 +4,13 @@
  */
 package view;
 
+import View.VistaHotelesRegistrados;
 import controller.RoomController;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -27,7 +30,7 @@ public class ViewRooms extends javax.swing.JFrame {
         cargarHabitacionesEnTabla();
     }
 
-    private void cargarHabitacionesEnTabla() {
+    public void cargarHabitacionesEnTabla() {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
@@ -50,7 +53,7 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+    public void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow != -1) {
             int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0); 
@@ -196,13 +199,12 @@ public class ViewRooms extends javax.swing.JFrame {
 
     private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
         
-        try {
+             try {
             VistaHotelesRegistrados hoteles = new VistaHotelesRegistrados();
             hoteles.setVisible(true);
         } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(ViewRooms.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            Logger.getLogger(RoomCRUDView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed

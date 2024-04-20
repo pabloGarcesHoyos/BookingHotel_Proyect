@@ -1,11 +1,12 @@
-
-package view;
+package View;
 
 import controller.HotelController;
 import controller.RoomController;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -14,12 +15,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Hotel;
 import model.Room;
+import view.ViewLogin;
+import view.ViewRooms;
 
 public class VistaHotelesRegistrados extends javax.swing.JFrame {
 
     private final RoomController roomController;
     private final HotelController hotelController;
-    private ViewRooms room;
+    ViewRooms rooms;
 
     public VistaHotelesRegistrados() throws SQLException {
         initComponents();
@@ -28,7 +31,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
 
         roomController = new RoomController();
         hotelController = new HotelController();
-        room = new ViewRooms();
+        rooms = new ViewRooms();
 
         llenarTablaHoteles();
 
@@ -63,17 +66,48 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             int selectedRow = tblHoteles.getSelectedRow();
             int hotelId = (int) tblHoteles.getValueAt(selectedRow, 0);
             llenarTablaHabitaciones(hotelId);
+
+            // Obtener los detalles del hotel seleccionado y mostrarlos en los campos de texto
+            Hotel hotel = hotelController.getHotelById(hotelId);
+            txtId.setText(String.valueOf(hotel.getId()));
+            txtAdreess.setText(hotel.getAddress());
+            txtCiudad.setText(hotel.getName());
+
+            txtClasificacion.setText(String.valueOf(hotel.getClassification()));
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones del hotel: " + ex.getMessage());
         }
     }
 
-    private void llenarTablaHabitaciones(int hotelId) throws SQLException {
-        DefaultTableModel model = hotelId();
+    private void llenarTablaHabitaciones(int hotelId) {
+        DefaultTableModel model = (DefaultTableModel) rooms.getTblHabitaciones().getModel();
         model.setRowCount(0);
-        List<Room> rooms = roomController.getAvailableRoomsForHotel(hotelId);
+        try {
+            List<Room> rooms = roomController.getAvailableRoomsForHotel(hotelId);
+            for (Room room : rooms) {
+                model.addRow(new Object[]{room.getId(), room.getRoomNumber(), room.getRoomType(), room.getPricePerNight(), room.getAmenitiesDetails(), room.getHotelId()});
+            }
+            
+            // Escribir los datos de las habitaciones en archivos de texto
+            escribirDatosEnArchivo(rooms);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones del hotel: " + ex.getMessage());
+        }
+    }
+
+    private void escribirDatosEnArchivo(List<Room> rooms) {
         for (Room room : rooms) {
-            model.addRow(new Object[]{room.getId(), room.getRoomNumber(), room.getRoomType(), room.getPricePerNight(), room.getAmenitiesDetails(), room.getHotelId()});
+            String nombreArchivo = "habitacion_" + room.getRoomNumber() + ".txt";
+            try (PrintWriter writer = new PrintWriter(new FileWriter(nombreArchivo, true))) {
+                writer.println("Número de habitación: " + room.getRoomNumber());
+                writer.println("Tipo de habitación: " + room.getRoomType());
+                writer.println("Precio por noche: " + room.getPricePerNight());
+                writer.println("Detalles de las comodidades: " + room.getAmenitiesDetails());
+                writer.println("ID del hotel: " + room.getHotelId());
+                writer.println();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error al escribir en el archivo: " + ex.getMessage());
+            }
         }
     }
 

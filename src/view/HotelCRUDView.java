@@ -4,6 +4,7 @@
  */
 package view;
 
+import View.VistaHotelesRegistrados;
 import controller.HotelController;
 import java.awt.List;
 import java.sql.SQLException;
@@ -421,10 +422,10 @@ public class HotelCRUDView extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         try {
-            VistaHotelesRegistrados Hoteles = new VistaHotelesRegistrados();
-            Hoteles.setVisible(true);
+            VistaHotelesRegistrados hoteles = new VistaHotelesRegistrados();
+            hoteles.setVisible(true);
         } catch (SQLException ex) {
-            Logger.getLogger(HotelCRUDView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RoomCRUDView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 

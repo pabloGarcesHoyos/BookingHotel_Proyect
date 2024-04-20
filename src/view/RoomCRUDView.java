@@ -4,6 +4,7 @@
  */
 package view;
 
+import View.VistaHotelesRegistrados;
 import controller.HotelController;
 import controller.RoomController;
 import controller.UserController;
@@ -420,7 +421,6 @@ public class RoomCRUDView extends javax.swing.JFrame {
         try {
             VistaHotelesRegistrados hoteles = new VistaHotelesRegistrados();
             hoteles.setVisible(true);
-            this.dispose();
         } catch (SQLException ex) {
             Logger.getLogger(RoomCRUDView.class.getName()).log(Level.SEVERE, null, ex);
         }

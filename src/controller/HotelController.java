@@ -38,6 +38,26 @@ public class HotelController {
             System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
         }
     }
+    public Hotel getHotelById(int hotelId) throws SQLException {
+    String sql = "SELECT * FROM hotel WHERE id = ?";
+    try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
+        statement.setInt(1, hotelId);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            String address = resultSet.getString("address");
+            String classification = resultSet.getString("classification");
+            String amenities = resultSet.getString("amenities");
+            String images = resultSet.getString("images");
+            return new Hotel(id, name, address, classification, amenities, images);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al obtener el hotel: " + e.getMessage());
+        throw e;
+    }
+    return null;
+}
 
     public boolean verificarDisponibilidad(String idHotel, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         try {
