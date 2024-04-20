@@ -23,15 +23,14 @@ public class RoomController {
     }
 
     public void createRoom(int id, int roomNumber, String roomType, int pricePerNight, int availability, String amenitiesDetails, String hotel) throws SQLException {
-        String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, availability, amenities_details, hotel) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, amenities_details, hotel) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(createSQL)) {
             statement.setInt(1, id);
             statement.setInt(2, roomNumber);
             statement.setString(3, roomType);
             statement.setInt(4, pricePerNight);
-            statement.setInt(5, availability);
-            statement.setString(6, amenitiesDetails);
-            statement.setString(7, hotel);
+            statement.setString(5, amenitiesDetails);
+            statement.setString(6, hotel);
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 System.out.println("Inserción exitosa");
@@ -73,10 +72,9 @@ public class RoomController {
                 int roomNumber = rs.getInt("room_number");
                 String roomType = rs.getString("room_type");
                 int pricePerNight = rs.getInt("price_per_night");
-                int availability = rs.getInt("availability");
                 String amenitiesDetails = rs.getString("amenities_details");
                 String hotel = rs.getString("hotel");
-                return new Room(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel);
+                return new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
             }
         } catch (SQLException e) {
             System.out.println("Error al leer datos: " + e.getMessage());
