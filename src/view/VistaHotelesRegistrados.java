@@ -2,115 +2,82 @@
 package view;
 
 import controller.HotelController;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import controller.RoomController;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import javax.swing.JFrame;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Hotel;
 import model.Room;
-import java.util.List;
 
-public class VistaHotelesRegistrados extends JFrame {
-    private HotelController controlH;
+public class VistaHotelesRegistrados extends javax.swing.JFrame {
+
+    private final RoomController roomController;
+    private final HotelController hotelController;
+    private ViewRooms room;
 
     public VistaHotelesRegistrados() throws SQLException {
         initComponents();
-        setLocationRelativeTo(null);
-        this.controlH = new HotelController();
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(this);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+
+        roomController = new RoomController();
+        hotelController = new HotelController();
+        room = new ViewRooms();
 
         llenarTablaHoteles();
 
         tblHoteles.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    try {
-                        int selectedRow = tblHoteles.getSelectedRow();
-                        if (selectedRow != -1) { 
-                            String id = tblHoteles.getValueAt(selectedRow, 0) != null ? tblHoteles.getValueAt(selectedRow, 0).toString() : "";
-                            String nombre = tblHoteles.getValueAt(selectedRow, 1) != null ? tblHoteles.getValueAt(selectedRow, 1).toString() : "";
-                            String ciudad = tblHoteles.getValueAt(selectedRow, 2) != null ? tblHoteles.getValueAt(selectedRow, 2).toString() : "";
-                            String precio = tblHoteles.getValueAt(selectedRow, 3) != null ? tblHoteles.getValueAt(selectedRow, 3).toString() : "";
-                            String clasificacion = tblHoteles.getValueAt(selectedRow, 4) != null ? tblHoteles.getValueAt(selectedRow, 4).toString() : "";
-                            String comodidades = tblHoteles.getValueAt(selectedRow, 5) != null ? tblHoteles.getValueAt(selectedRow, 5).toString() : "";
-                            
-                            escribirEnArchivo("id.txt", id);
-                            escribirEnArchivo("nombre.txt", nombre);
-                            escribirEnArchivo("ciudad.txt", ciudad);
-                            escribirEnArchivo("precio.txt", precio);
-                            escribirEnArchivo("clasificacion.txt", clasificacion);
-                            escribirEnArchivo("comodidades.txt", comodidades);
-                            
-                            txtId.setText(id);
-                            txtAdreess.setText(ciudad);
-                            txtCiudad.setText(ciudad);
-                            txtPrecio.setText(precio);
-                            txtClasificacion.setText(clasificacion);
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
+            public void valueChanged(ListSelectionEvent evt) {
+                tblHotelesValueChanged(evt);
             }
         });
 
-        jDateChooser1.setDate(new Date());
-        jDateChooser2.setDate(new Date());
-
-        btnReservar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReservarActionPerformed(evt);
-            }
-        });
+        btnReservar.setVisible(false);
+        jDateChooser1.setDate(new java.util.Date());
+        jDateChooser2.setDate(new java.util.Date());
     }
 
-    private void escribirEnArchivo(String nombreArchivo, String texto) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
-            writer.write(texto);
-        }
-    }
-
-    private void llenarTablaHoteles() throws SQLException {
+    private void llenarTablaHoteles() {
         DefaultTableModel model = (DefaultTableModel) tblHoteles.getModel();
         model.setRowCount(0);
-        model.setColumnIdentifiers(new Object[]{
-            "ID Hotel", "Nombre", "Ciudad", "Precio", "Clasificación", "Comodidades"
-        });
 
-        ArrayList<Hotel> hoteles = (ArrayList<Hotel>) controlH.getAllHotels();
-        hoteles.sort(Comparator.comparing(Hotel::getClassification));
-
-        for (Hotel hotel : hoteles) {
-            model.addRow(new Object[]{
-                hotel.getId(),
-                hotel.getName(),
-                hotel.getAddress(),
-                hotel.getClassification(),
-                hotel.getAmenities()
-            });
+        try {
+            List<Hotel> hoteles = hotelController.getAllHotels();
+            for (Hotel hotel : hoteles) {
+                model.addRow(new Object[]{hotel.getId(), hotel.getName(), hotel.getAddress(), hotel.getClassification(), hotel.getAmenities()});
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar los hoteles: " + ex.getMessage());
         }
-
-        tblHoteles.setModel(model);
     }
+
+    private void tblHotelesValueChanged(javax.swing.event.ListSelectionEvent evt) {
+        try {
+            int selectedRow = tblHoteles.getSelectedRow();
+            int hotelId = (int) tblHoteles.getValueAt(selectedRow, 0);
+            llenarTablaHabitaciones(hotelId);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones del hotel: " + ex.getMessage());
+        }
+    }
+
+    private void llenarTablaHabitaciones(int hotelId) throws SQLException {
+        DefaultTableModel model = hotelId();
+        model.setRowCount(0);
+        List<Room> rooms = roomController.getAvailableRoomsForHotel(hotelId);
+        for (Room room : rooms) {
+            model.addRow(new Object[]{room.getId(), room.getRoomNumber(), room.getRoomType(), room.getPricePerNight(), room.getAmenitiesDetails(), room.getHotelId()});
+        }
+    }
+
     
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -429,11 +396,10 @@ public class VistaHotelesRegistrados extends JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-        LocalDateTime fechaActual = LocalDateTime.now();
-        LocalDate fechaHoy = fechaActual.toLocalDate();
+        LocalDate fechaActual = LocalDate.now();
         
         LocalDate fechaEntrada = jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        if (fechaEntrada.isBefore(fechaHoy)) {
+        if (fechaEntrada.isBefore(fechaActual)) {
             JOptionPane.showMessageDialog(this, "No se puede reservar para una fecha que ya ha pasado.");
             return;
         }
@@ -444,14 +410,20 @@ public class VistaHotelesRegistrados extends JFrame {
             return;
         }
         
-        if (fechaSalida.isBefore(fechaHoy)) {
+        if (fechaSalida.isBefore(fechaActual)) {
             JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser una fecha que ya ha pasado.");
             return;
         }
         
-        String idHotel = txtId.getText();
+        int selectedRow = tblHoteles.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un hotel para realizar la reserva.");
+            return;
+        }
         
-        List<Room> habitacionesDisponibles = controlH.getAvailableRoomsForHotel(idHotel, fechaEntrada, fechaSalida);
+        int hotelId = (int) tblHoteles.getValueAt(selectedRow, 0);
+        
+        List<Room> habitacionesDisponibles = roomController.getAvailableRoomsForHotel(hotelId);
         
         if (habitacionesDisponibles.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay habitaciones disponibles en el hotel para las fechas seleccionadas.");
@@ -469,7 +441,7 @@ public class VistaHotelesRegistrados extends JFrame {
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
     }
-
+    
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void txtAdreessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAdreessActionPerformed
@@ -521,4 +493,8 @@ public class VistaHotelesRegistrados extends JFrame {
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
+
+    private DefaultTableModel hotelId() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

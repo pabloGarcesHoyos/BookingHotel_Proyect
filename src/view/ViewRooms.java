@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import model.Room;
 
@@ -27,7 +28,7 @@ public class ViewRooms extends javax.swing.JFrame {
     }
 
     private void cargarHabitacionesEnTabla() {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
         try {
@@ -41,7 +42,7 @@ public class ViewRooms extends javax.swing.JFrame {
     }
 
     public void mostrarHabitacionesDisponibles(List<Room> habitaciones) {
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
         for (Room habitacion : habitaciones) {
@@ -50,9 +51,9 @@ public class ViewRooms extends javax.swing.JFrame {
     }
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
-        int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow != -1) {
-            int roomId = (int) jTable1.getValueAt(selectedRow, 0); 
+            int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0); 
             LocalDate fechaEntrada = LocalDate.now();
             LocalDate fechaSalida = LocalDate.now().plusDays(1);
 
@@ -70,6 +71,13 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 
+    public JTable getTblHabitaciones() {
+        return tblHabitaciones;
+    }
+
+    public void setTblHabitaciones(JTable tblHabitaciones) {
+        this.tblHabitaciones = tblHabitaciones;
+    }
 
     
     @SuppressWarnings("unchecked")
@@ -81,7 +89,7 @@ public class ViewRooms extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblHabitaciones = new javax.swing.JTable();
         btnReservar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -109,7 +117,7 @@ public class ViewRooms extends javax.swing.JFrame {
             .addGap(0, 32, Short.MAX_VALUE)
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblHabitaciones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -120,7 +128,7 @@ public class ViewRooms extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblHabitaciones);
 
         btnReservar.setText("Reservar");
         btnReservar.addActionListener(new java.awt.event.ActionListener() {
@@ -201,13 +209,13 @@ public class ViewRooms extends javax.swing.JFrame {
     try {
         LocalDate fechaHoy = LocalDate.now();
 
-        int selectedRow = jTable1.getSelectedRow();
+        int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
             return;
         }
 
-        String roomId = jTable1.getValueAt(selectedRow, 0).toString();
+        String roomId = tblHabitaciones.getValueAt(selectedRow, 0).toString();
 
         LocalDate fechaEntrada = LocalDate.now();
         LocalDate fechaSalida = LocalDate.now().plusDays(1);
@@ -291,6 +299,6 @@ public class ViewRooms extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblHabitaciones;
     // End of variables declaration//GEN-END:variables
 }
