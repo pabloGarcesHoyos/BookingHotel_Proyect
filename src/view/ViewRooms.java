@@ -4,24 +4,64 @@
  */
 package view;
 
+import controller.RoomController;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Room;
 
-/**
- *
- * @author pablo
- */
 public class ViewRooms extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ViewRooms
-     */
-    public ViewRooms() {
+    private final RoomController roomController;
+
+    public ViewRooms() throws SQLException {
         initComponents();
-        
+        setLocationRelativeTo(this);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+
+        roomController = new RoomController();
+
+        cargarHabitacionesEnTabla();
     }
 
+    private void cargarHabitacionesEnTabla() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
+
+        try {
+            List<Room> habitaciones = roomController.getAllRooms();
+            for (Room habitacion : habitaciones) {
+                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails()});
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
+        }
+    }
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow != -1) { 
+            int roomId = (int) jTable1.getValueAt(selectedRow, 0); // Obtener el ID de la habitación seleccionada
+            LocalDate fechaEntrada = LocalDate.now(); 
+            LocalDate fechaSalida = LocalDate.now().plusDays(1); 
+
+            try {
+                boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+                if (disponibilidad) {
+                    btnReservar.setVisible(true);
+                } else {
+                    btnReservar.setVisible(false);
+                    JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,6 +77,7 @@ public class ViewRooms extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        btnReservar = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
@@ -76,6 +117,8 @@ public class ViewRooms extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        btnReservar.setText("Reservar");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -84,14 +127,21 @@ public class ViewRooms extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addComponent(btnReservar)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(99, 99, 99)
+                        .addComponent(btnReservar)))
                 .addGap(0, 23, Short.MAX_VALUE))
         );
 
@@ -114,9 +164,7 @@ public class ViewRooms extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,12 +215,17 @@ public class ViewRooms extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ViewRooms().setVisible(true);
+                try {
+                    new ViewRooms().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(ViewRooms.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnReservar;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem2;
     private javax.swing.JMenu jMenu1;

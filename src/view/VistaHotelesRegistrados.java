@@ -4,7 +4,6 @@
  */
 package view;
 
-import com.toedter.calendar.JDateChooser;
 import controller.HotelController;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,16 +21,17 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Hotel;
+import model.Room;
+import java.util.List;
 
 public class VistaHotelesRegistrados extends JFrame {
     private HotelController controlH;
-    
 
     public VistaHotelesRegistrados() throws SQLException {
         initComponents();
         setLocationRelativeTo(null);
         this.controlH = new HotelController();
-        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         llenarTablaHoteles();
 
@@ -69,10 +69,7 @@ public class VistaHotelesRegistrados extends JFrame {
             }
         });
 
-        jDateChooser1 = new JDateChooser();
         jDateChooser1.setDate(new Date());
-
-        jDateChooser2 = new JDateChooser();
         jDateChooser2.setDate(new Date());
 
         btnReservar.addActionListener(new java.awt.event.ActionListener() {
@@ -110,6 +107,7 @@ public class VistaHotelesRegistrados extends JFrame {
 
         tblHoteles.setModel(model);
     }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -433,27 +431,25 @@ public class VistaHotelesRegistrados extends JFrame {
         
         String idHotel = txtId.getText();
         
-        boolean disponibilidad = controlH.verificarDisponibilidad(idHotel, fechaEntrada, fechaSalida);
-        if (!disponibilidad) {
-            JOptionPane.showMessageDialog(this, "No se puede reservar en las fechas seleccionadas debido a la disponibilidad.");
+        List<Room> habitacionesDisponibles = controlH.getAvailableRoomsForHotel(idHotel, fechaEntrada, fechaHoy);
+        
+        if (habitacionesDisponibles.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay habitaciones disponibles en el hotel para las fechas seleccionadas.");
             return;
         }
         
-         boolean reservaExitosa = controlH.realizarReserva(idHotel, fechaEntrada, fechaSalida);
-        if (reservaExitosa) {
-            JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente");
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, verifique la disponibilidad.");
-        }
+        ViewRooms viewRooms = new ViewRooms();
+        
+        viewRooms.setVisible(true);
 
-        llenarTablaHoteles();
-
+        // Limpiar el campo de ID del hotel
         txtId.setText("");
     } catch (NullPointerException ex) {
         JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrada en el calendario.");
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
     }
+
 
     }//GEN-LAST:event_btnReservarActionPerformed
 
@@ -462,6 +458,7 @@ public class VistaHotelesRegistrados extends JFrame {
     }//GEN-LAST:event_txtAdreessActionPerformed
 
     
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnReservar;

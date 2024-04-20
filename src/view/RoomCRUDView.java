@@ -10,6 +10,8 @@ import controller.UserController;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Hotel;
 import model.Room;
 
@@ -297,40 +299,40 @@ public class RoomCRUDView extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
 
-        int id = Integer.parseInt(txtId.getText());
-        try {
-            controller.readRooms(id);
-        } catch (SQLException ex) {
-
-        }
+//        int id = Integer.parseInt(txtId.getText());
+//        try {
+//            controller.readRooms(id);
+//        } catch (SQLException ex) {
+//
+//        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        int id = Integer.parseInt(txtId.getText());
-        int roomNumber = Integer.parseInt(txtRoomNumber.getText());
-        String roomType = txtRoomType.getText();
-        int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
-        int availability;
-        String amenitiesDetails = txtAmenitiesDetails.getText();
-
-        if (cbAvailability.isSelected()) {
-            availability = 1;
-        } else {
-            availability = 0;
-        }
-
-        try {
-            controller.updateRooms(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails);
-        } catch (SQLException ex) {
-        }
+//        int id = Integer.parseInt(txtId.getText());
+//        int roomNumber = Integer.parseInt(txtRoomNumber.getText());
+//        String roomType = txtRoomType.getText();
+//        int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
+//        int availability;
+//        String amenitiesDetails = txtAmenitiesDetails.getText();
+//
+//        if (cbAvailability.isSelected()) {
+//            availability = 1;
+//        } else {
+//            availability = 0;
+//        }
+//
+//        try {
+//            controller.updateRooms(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails);
+//        } catch (SQLException ex) {
+//        }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        int id = Integer.parseInt(txtId.getText());
-        try {
-            controller.deleteRooms(id);
-        } catch (SQLException ex) {
-        }
+//        int id = Integer.parseInt(txtId.getText());
+//        try {
+//            controller.deleteRooms(id);
+//        } catch (SQLException ex) {
+//        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void cbHotelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHotelesActionPerformed
@@ -368,7 +370,11 @@ public class RoomCRUDView extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RoomCRUDView().setVisible(true);
+                try {
+                    new RoomCRUDView().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(RoomCRUDView.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

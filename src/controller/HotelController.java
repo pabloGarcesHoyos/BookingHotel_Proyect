@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import model.Room;
 
 public class HotelController {
 
@@ -132,6 +133,31 @@ public class HotelController {
             System.out.println("Error al leer datos: " + e.getMessage());
         }
     }
+    public List<Room> getAvailableRoomsForHotel(String hotelId, LocalDate startDate, LocalDate endDate) throws SQLException {
+    List<Room> availableRooms = new ArrayList<>();
+    String sql = "SELECT * FROM room WHERE availability = 1 AND hotel_id = ? AND room_id NOT IN " +
+                 "(SELECT room_id FROM reservation WHERE hotel_id = ? AND (start_date <= ? AND end_date >= ?))";
+    try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
+        statement.setString(1, hotelId);
+        statement.setString(2, hotelId);
+        statement.setDate(3, java.sql.Date.valueOf(endDate));
+        statement.setDate(4, java.sql.Date.valueOf(startDate));
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            int roomNumber = resultSet.getInt("room_number");
+            String roomType = resultSet.getString("room_type");
+            int pricePerNight = resultSet.getInt("price_per_night");
+            int availability = resultSet.getInt("availability");
+            String amenitiesDetails = resultSet.getString("amenities_details");
+            availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, true, amenitiesDetails));
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al obtener las habitaciones disponibles para el hotel: " + e.getMessage());
+    }
+    return availableRooms;
+}
+
 
     public List<Hotel> getAllHotels() throws SQLException {
         List<Hotel> hotels = new ArrayList<>();
