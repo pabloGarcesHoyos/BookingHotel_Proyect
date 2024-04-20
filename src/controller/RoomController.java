@@ -22,25 +22,26 @@ public class RoomController {
         this.connection = new MySQLConnection();
     }
 
-    public void createRoom(int id, int roomNumber, String roomType, int pricePerNight, String amenitiesDetails, String hotel) throws SQLException {
-        String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, amenities_details, hotel_id) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(createSQL)) {
-            statement.setInt(1, id);
-            statement.setInt(2, roomNumber);
-            statement.setString(3, roomType);
-            statement.setInt(4, pricePerNight);
-            statement.setString(5, amenitiesDetails);
-            statement.setString(6, hotel);
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Inserción exitosa");
-            } else {
-                System.out.println("No se pudo insertar los datos");
-            }
-        } catch (SQLException e) {
-            System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
+    public void createRoom(Room room) throws SQLException {
+    String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, amenities_details, hotel_id) VALUES (?, ?, ?, ?, ?, ?)";
+    try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(createSQL)) {
+        statement.setInt(1, room.getId());
+        statement.setInt(2, room.getRoomNumber());
+        statement.setString(3, room.getRoomType());
+        statement.setDouble(4, room.getPricePerNight());
+        statement.setString(5, room.getAmenitiesDetails());
+        statement.setInt(6, room.getHotelId());
+        int rowsAffected = statement.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Inserción exitosa");
+        } else {
+            System.out.println("No se pudo insertar los datos");
         }
+    } catch (SQLException e) {
+        System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
     }
+}
+
 
     public boolean verificarDisponibilidad(int roomId, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         boolean disponibilidad = true;
@@ -74,7 +75,7 @@ public class RoomController {
                 int pricePerNight = rs.getInt("price_per_night");
                 String amenitiesDetails = rs.getString("amenities_details");
                 String hotel = rs.getString("hotel_id");
-                return new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
+                return new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, id);
             }
         } catch (SQLException e) {
             System.out.println("Error al leer datos: " + e.getMessage());
@@ -129,7 +130,7 @@ public class RoomController {
                 int pricePerNight = resultSet.getInt("price_per_night");
                 String amenitiesDetails = resultSet.getString("amenities_details");
                 String hotel = resultSet.getString("hotel_id");
-                availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
+                availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, id));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener las habitaciones disponibles para el hotel: " + e.getMessage());
@@ -148,7 +149,7 @@ public class RoomController {
                 int pricePerNight = resultSet.getInt("price_per_night");
                 String amenitiesDetails = resultSet.getString("amenities_details");
                 String hotel = resultSet.getString("hotel_id");
-                rooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
+                rooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, id));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener las habitaciones: " + e.getMessage());
@@ -171,7 +172,7 @@ public class RoomController {
                 String amenitiesDetails = resultSet.getString("amenities_details");
                 int hotelId = resultSet.getInt("hotel_id");
                 String hotel = resultSet.getString("hotel_id");
-                habitacionesDisponibles.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
+                habitacionesDisponibles.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, id));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener las habitaciones disponibles para las fechas proporcionadas: " + e.getMessage());

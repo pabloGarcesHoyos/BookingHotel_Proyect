@@ -9,21 +9,21 @@ package model;
  * @author pablo
  */
 public class Room {
- 
+     
     private int id;
     private int roomNumber;
     private String roomType;
     private double pricePerNight;
     private String amenitiesDetails;
-    private String hotel;
+    private int hotelId; // Cambiado a int para almacenar el ID del hotel
 
-    public Room(int id, int roomNumber, String roomType, double pricePerNight, String amenitiesDetails, String hotel) {
+    public Room(int id, int roomNumber, String roomType, double pricePerNight, String amenitiesDetails, int hotelId) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.pricePerNight = pricePerNight;
         this.amenitiesDetails = amenitiesDetails;
-        this.hotel = hotel;
+        this.hotelId = hotelId;
     }
 
     public int getId() {
@@ -66,12 +66,12 @@ public class Room {
         this.amenitiesDetails = amenitiesDetails;
     }
 
-    public String getHotel() {
-        return hotel;
+    public int getHotelId() {
+        return hotelId;
     }
 
-    public void setHotel(String hotel) {
-        this.hotel = hotel;
+    public void setHotelId(int hotelId) {
+        this.hotelId = hotelId;
     }
 
 }

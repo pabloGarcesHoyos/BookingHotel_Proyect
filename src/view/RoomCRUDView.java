@@ -294,7 +294,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
         int id = Integer.parseInt(txtId.getText());
         int roomNumber = Integer.parseInt(txtRoomNumber.getText());
         String roomType = txtRoomType.getText();
-        int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
+        double pricePerNight = Double.parseDouble(txtPricePerNight.getText());
         String amenitiesDetails = txtAmenitiesDetails.getText();
         String hotelName = cbHoteles.getSelectedItem().toString();
 
@@ -306,7 +306,10 @@ public class RoomCRUDView extends javax.swing.JFrame {
         // Obtener el ID del hotel seleccionado
         int hotelId = obtenerIdHotelPorNombre(hotelName);
 
-        // Verificar disponibilidad de habitación
+        // Crear una nueva habitación con los detalles proporcionados
+        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotelId);
+
+        // Verificar la disponibilidad de la habitación
         List<Room> habitacionesDisponibles = obtenerHabitacionesDisponiblesPorHotel(hotelId);
         for (Room room : habitacionesDisponibles) {
             if (room.getRoomNumber() == roomNumber) {
@@ -315,11 +318,8 @@ public class RoomCRUDView extends javax.swing.JFrame {
             }
         }
 
-        // Crear instancia de Room
-        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotelName);
-
-        // Registrar la habitación
-        controller.createRoom(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotelName);
+        // Registrar la nueva habitación en la base de datos
+        controller.createRoom(nuevaHabitacion);
 
         // Actualizar la lista de habitaciones disponibles
         cbHabitacionesActionPerformed();
@@ -328,6 +328,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error al crear la habitación: " + ex.getMessage());
     }
+
 
     }//GEN-LAST:event_btnRegistrarActionPerformed
 

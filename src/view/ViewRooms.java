@@ -33,7 +33,7 @@ public class ViewRooms extends javax.swing.JFrame {
         try {
             List<Room> habitaciones = roomController.getAllRooms();
             for (Room habitacion : habitaciones) {
-                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotel()});
+                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotelId()});
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
@@ -45,7 +45,7 @@ public class ViewRooms extends javax.swing.JFrame {
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
         for (Room habitacion : habitaciones) {
-            model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotel()});
+            model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotelId()});
         }
     }
 

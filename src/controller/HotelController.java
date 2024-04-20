@@ -152,7 +152,7 @@ public class HotelController {
                 int pricePerNight = resultSet.getInt("price_per_night");
                 String hotel = resultSet.getString("hotel");
                 String amenitiesDetails = resultSet.getString("amenities_details");
-                availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
+                availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, id));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener las habitaciones disponibles para el hotel: " + e.getMessage());
