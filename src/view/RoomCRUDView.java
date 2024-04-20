@@ -290,7 +290,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-     try {
+    try {
         int id = Integer.parseInt(txtId.getText());
         int roomNumber = Integer.parseInt(txtRoomNumber.getText());
         String roomType = txtRoomType.getText();
@@ -303,9 +303,6 @@ public class RoomCRUDView extends javax.swing.JFrame {
             return; 
         }
 
-        // Crear instancia de Room
-        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
-
         // Verificar disponibilidad de habitación
         List<Room> habitacionesDisponibles = obtenerHabitacionesDisponiblesPorHotel(obtenerIdHotelPorNombre(hotel));
         for (Room room : habitacionesDisponibles) {
@@ -315,8 +312,11 @@ public class RoomCRUDView extends javax.swing.JFrame {
             }
         }
 
+        // Crear instancia de Room
+        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
+
         // Registrar la habitación
-        controller.createRoom(id, roomNumber, roomType, pricePerNight, ALLBITS, amenitiesDetails, hotel);
+        controller.createRoom(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
 
         // Actualizar la lista de habitaciones disponibles
         cbHabitacionesActionPerformed();
