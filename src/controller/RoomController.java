@@ -163,6 +163,53 @@ public class RoomController {
         }
         return rooms;
     }
+    public List<Room> getAvailableRoomsForDates(LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+        List<Room> habitacionesDisponibles = new ArrayList<>();
+        String sql = "SELECT * FROM room WHERE id NOT IN (SELECT id_room FROM reservation WHERE fecha_entrada <= ? AND fecha_salida >= ?)";
+        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
+            statement.setDate(1, java.sql.Date.valueOf(fechaSalida));
+            statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int roomNumber = resultSet.getInt("room_number");
+                String roomType = resultSet.getString("room_type");
+                double pricePerNight = resultSet.getDouble("price_per_night");
+                String amenitiesDetails = resultSet.getString("amenities_details");
+                int hotelId = resultSet.getInt("id_hotel");
+                habitacionesDisponibles.add(new Room(id, roomNumber, roomType, pricePerNight, hotelId, amenitiesDetails, sql));
+            }
+        }
+        return habitacionesDisponibles;
+    }
+    public boolean realizarReserva(int roomId, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+    try {
+        boolean disponibilidad = verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+        
+        if (!disponibilidad) {
+            return false;
+        }
+
+        String insertSQL = "INSERT INTO reservation (id_room, fecha_entrada, fecha_salida) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(insertSQL)) {
+            statement.setInt(1, roomId);
+            statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
+            statement.setDate(3, java.sql.Date.valueOf(fechaSalida));
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Reserva realizada para la habitación con ID " + roomId + " desde " + fechaEntrada + " hasta " + fechaSalida);
+                return true;
+            }
+        }
+
+        return false;
+    } catch (SQLException e) {
+        System.out.println("Error al realizar la reserva: " + e.getMessage());
+        throw e;
+    }
+}
+
+    
 
     public List<Room> getAvailableRoomsForHotel(int hotelId) throws SQLException {
         List<Room> availableRooms = new ArrayList<>();

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package view;
 
 import controller.HotelController;
@@ -427,7 +424,7 @@ public class VistaHotelesRegistrados extends JFrame {
         
         String idHotel = txtId.getText();
         
-        List<Room> habitacionesDisponibles = controlH.getAvailableRoomsForHotel(idHotel, fechaEntrada, fechaHoy);
+        List<Room> habitacionesDisponibles = controlH.getAvailableRoomsForHotel(idHotel, fechaEntrada, fechaSalida);
         
         if (habitacionesDisponibles.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No hay habitaciones disponibles en el hotel para las fechas seleccionadas.");
@@ -435,7 +432,7 @@ public class VistaHotelesRegistrados extends JFrame {
         }
         
         ViewRooms viewRooms = new ViewRooms();
-        
+        viewRooms.mostrarHabitacionesDisponibles(habitacionesDisponibles);
         viewRooms.setVisible(true);
 
         // Limpiar el campo de ID del hotel
