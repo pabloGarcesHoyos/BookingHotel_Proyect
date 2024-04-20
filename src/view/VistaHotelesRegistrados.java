@@ -164,8 +164,20 @@ public class VistaHotelesRegistrados extends JFrame {
             new String [] {
                 "Ciudad", "Fecha entrada", "Fecha salida", "Numero habitaciones"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblHoteles);
+        if (tblHoteles.getColumnModel().getColumnCount() > 0) {
+            tblHoteles.getColumnModel().getColumn(1).setResizable(false);
+            tblHoteles.getColumnModel().getColumn(2).setResizable(false);
+        }
 
         jLabel1.setText("Precio");
 
@@ -203,17 +215,25 @@ public class VistaHotelesRegistrados extends JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel5.setText("Reservas");
 
+        txtId.setEditable(false);
         txtId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIdActionPerformed(evt);
             }
         });
 
+        txtAdreess.setEditable(false);
         txtAdreess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtAdreessActionPerformed(evt);
             }
         });
+
+        txtCiudad.setEditable(false);
+
+        txtPrecio.setEditable(false);
+
+        txtClasificacion.setEditable(false);
 
         btnReservar.setText("Reservar");
         btnReservar.addActionListener(new java.awt.event.ActionListener() {
@@ -338,7 +358,7 @@ public class VistaHotelesRegistrados extends JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
                                     .addComponent(txtFiltroComodidades, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 212, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 193, Short.MAX_VALUE)
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
