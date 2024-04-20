@@ -178,10 +178,16 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtRoomNumber">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRoomNumberKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtRoomType">
         </Component>
         <Component class="javax.swing.JTextField" name="txtPricePerNight">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPricePerNightKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnRegistrar">
           <Properties>
@@ -251,6 +257,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtId">
+          <Events>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtIdKeyTyped"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cbHoteles">
           <Properties>

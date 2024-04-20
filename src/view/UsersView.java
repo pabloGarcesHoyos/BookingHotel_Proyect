@@ -4,6 +4,7 @@
  */
 package view;
 
+import connect.ValidadorEmail;
 import controller.UserController;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 public class UsersView extends javax.swing.JFrame {
 
     UserController controller;
+    ValidadorEmail validadorEmail;
 
     /**
      * Creates new form UsersView
@@ -111,9 +113,21 @@ public class UsersView extends javax.swing.JFrame {
             }
         });
 
+        txtId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdKeyTyped(evt);
+            }
+        });
+
         jPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jPasswordActionPerformed(evt);
+            }
+        });
+
+        txtContactDetails.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtContactDetailsKeyTyped(evt);
             }
         });
 
@@ -264,7 +278,7 @@ public class UsersView extends javax.swing.JFrame {
         String email = txtEmail.getText();
         String password = jPassword.getText();
         String contactDetaild = txtContactDetails.getText();
-        String rol = cbRol.getSelectedItem().toString();        
+        String rol = cbRol.getSelectedItem().toString();
         try {
             controller.readUsers(id);
         } catch (SQLException ex) {
@@ -281,9 +295,11 @@ public class UsersView extends javax.swing.JFrame {
         String rol = cbRol.getSelectedItem().toString();
         limpiarCampos();
         try {
-            controller.createUsers(userName, email, password, contactDetaild,rol);
+            controller.createUsers(userName, email, password, contactDetaild, rol);
         } catch (SQLException ex) {
         }
+        
+        validadorEmail.validarEmail(email);
     }//GEN-LAST:event_btCreateActionPerformed
 
     private void jPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordActionPerformed
@@ -294,13 +310,41 @@ public class UsersView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbRolActionPerformed
 
+    private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            evt.consume();
+        }
+
+        if (txtId.getText().trim().length() == 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdKeyTyped
+
+    private void txtContactDetailsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContactDetailsKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            evt.consume();
+        }
+
+        if (txtContactDetails.getText().trim().length() == 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtContactDetailsKeyTyped
+
     private void limpiarCampos() {
         txtId.setText("");
         txtuserName.setText("");
         txtEmail.setText("");
         jPassword.setText("");
         txtContactDetails.setText("");
-        
+
     }
 
     /**

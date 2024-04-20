@@ -14,17 +14,28 @@ public class Room {
     private int roomNumber;
     private String roomType;
     private double pricePerNight;
-    private boolean availability;
+    private int availability;
     private String amenitiesDetails;
+    private String hotel;
 
-    public Room(int id, int roomNumber, String roomType, double pricePerNight, boolean availability, String amenitiesDetails) {
+    public Room(int id, int roomNumber, String roomType, double pricePerNight, int availability, String amenitiesDetails, String hotel) {
         this.id = id;
         this.roomNumber = roomNumber;
         this.roomType = roomType;
         this.pricePerNight = pricePerNight;
         this.availability = availability;
         this.amenitiesDetails = amenitiesDetails;
+        this.hotel = hotel;
     }
+
+    public String getHotel() {
+        return hotel;
+    }
+
+    public void setHotel(String hotel) {
+        this.hotel = hotel;
+    }
+
 
     public int getId() {
         return id;
@@ -58,11 +69,11 @@ public class Room {
         this.pricePerNight = pricePerNight;
     }
 
-    public boolean isAvailability() {
+    public int isAvailability() {
         return availability;
     }
 
-    public void setAvailability(boolean availability) {
+    public void setAvailability(int availability) {
         this.availability = availability;
     }
 

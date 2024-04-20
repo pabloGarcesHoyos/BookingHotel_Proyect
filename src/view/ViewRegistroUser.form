@@ -237,7 +237,9 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtId">
           <Events>
+            <EventHandler event="inputMethodTextChanged" listener="java.awt.event.InputMethodListener" parameters="java.awt.event.InputMethodEvent" handler="txtIdInputMethodTextChanged"/>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtIdActionPerformed"/>
+            <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtIdKeyTyped"/>
           </Events>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanel4">

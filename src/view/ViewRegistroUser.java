@@ -105,9 +105,21 @@ public class ViewRegistroUser extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         jLabel6.setText("ID");
 
+        txtId.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtIdInputMethodTextChanged(evt);
+            }
+        });
         txtId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIdActionPerformed(evt);
+            }
+        });
+        txtId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdKeyTyped(evt);
             }
         });
 
@@ -391,6 +403,31 @@ public class ViewRegistroUser extends javax.swing.JFrame {
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIdActionPerformed
+
+    private void txtIdInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtIdInputMethodTextChanged
+        // Validar si el texto ingresado es un número entero
+
+        try {
+            int input = Integer.parseInt(txtId.getText());
+            System.out.println("El número entero ingresado es: " + input);
+        } catch (NumberFormatException e) {
+            System.out.println("El texto ingresado no es un número entero válido.");
+        }
+    }//GEN-LAST:event_txtIdInputMethodTextChanged
+
+    private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            evt.consume();
+        }
+
+        if (txtId.getText().trim().length() == 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdKeyTyped
 
     /**
      * @param args the command line arguments

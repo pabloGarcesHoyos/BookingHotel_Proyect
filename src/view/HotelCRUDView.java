@@ -31,29 +31,29 @@ public class HotelCRUDView extends javax.swing.JFrame {
 
         controller = new HotelController();
     }
+
     private void initTable() {
-    jTable1.setModel(new javax.swing.table.DefaultTableModel(
-        new Object [][] {
-
-        },
-        new String [] {
-            "ID", "Nombre", "Dirección", "Clasificación", "Comodidades"
-        }
-    ));
-}
-    private void updateTable() {
-    try {
-        var hotels = controller.getAllHotels();
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Limpiar la tabla antes de agregar filas
-
-        for (Hotel hotel : hotels) {
-            model.addRow(new Object[]{hotel.getId(), hotel.getName(), hotel.getAddress(), hotel.getClassification(), hotel.getAmenities()});
-        }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al actualizar la tabla: " + ex.getMessage());
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                new Object[][]{},
+                new String[]{
+                    "ID", "Nombre", "Dirección", "Clasificación", "Comodidades"
+                }
+        ));
     }
-}
+
+    private void updateTable() {
+        try {
+            var hotels = controller.getAllHotels();
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0); // Limpiar la tabla antes de agregar filas
+
+            for (Hotel hotel : hotels) {
+                model.addRow(new Object[]{hotel.getId(), hotel.getName(), hotel.getAddress(), hotel.getClassification(), hotel.getAmenities()});
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al actualizar la tabla: " + ex.getMessage());
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,6 +90,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jCheckBoxMenuItem3 = new javax.swing.JCheckBoxMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
@@ -146,6 +147,12 @@ public class HotelCRUDView extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         jLabel7.setText("id");
+
+        txtId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdKeyTyped(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         jLabel2.setText("Nombre del hotel");
@@ -305,6 +312,14 @@ public class HotelCRUDView extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem2);
 
+        jMenuItem3.setText("Registro habitaciones");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem3);
+
         jCheckBoxMenuItem3.setSelected(true);
         jCheckBoxMenuItem3.setText("Salir");
         jCheckBoxMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -347,7 +362,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
         String amenities = txtAmenities.getText();
         try {
             controller.updateHotel(WIDTH, name, adress, classification, amenities, name);
-            
+
 //        String rol = cbRol.getSelectedItem().toString();
 //        int id = Integer.parseInt(txtId.getText());
 //        try {
@@ -379,18 +394,18 @@ public class HotelCRUDView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReadActionPerformed
 
     private void btCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCreateActionPerformed
-    int id = Integer.parseInt(txtId.getText());
-    String name = txtName.getText();
-    String address = txtAdress.getText();
-    String classification = txtClassification.getText();
-    String amenities = txtAmenities.getText();
-    try {
-        controller.createHotel(id, name, address, classification, amenities, name);
-        updateTable();
-        limpiarCampos();
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al crear el hotel: " + ex.getMessage());
-    }
+        int id = Integer.parseInt(txtId.getText());
+        String name = txtName.getText();
+        String address = txtAdress.getText();
+        String classification = txtClassification.getText();
+        String amenities = txtAmenities.getText();
+        try {
+            controller.createHotel(id, name, address, classification, amenities, name);
+            updateTable();
+            limpiarCampos();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al crear el hotel: " + ex.getMessage());
+        }
 
     }//GEN-LAST:event_btCreateActionPerformed
 
@@ -399,9 +414,9 @@ public class HotelCRUDView extends javax.swing.JFrame {
     }//GEN-LAST:event_txtClassificationActionPerformed
 
     private void jCheckBoxMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem3ActionPerformed
-    ViewLogin login = new ViewLogin();
-    login.setVisible(true);
-    this.dispose();
+        ViewLogin login = new ViewLogin();
+        login.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jCheckBoxMenuItem3ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -412,6 +427,33 @@ public class HotelCRUDView extends javax.swing.JFrame {
             Logger.getLogger(HotelCRUDView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
+        int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            
+            evt.consume();
+        }
+
+        if (txtId.getText().trim().length() == 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdKeyTyped
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        RoomCRUDView roomCRUDView;
+        try {
+            roomCRUDView = new RoomCRUDView();
+            roomCRUDView.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(HotelCRUDView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void limpiarCampos() {
         txtId.setText("");
@@ -482,6 +524,7 @@ public class HotelCRUDView extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;

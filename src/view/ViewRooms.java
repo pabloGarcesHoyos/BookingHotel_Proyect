@@ -35,7 +35,7 @@ public class ViewRooms extends javax.swing.JFrame {
         try {
             List<Room> habitaciones = roomController.getAllRooms();
             for (Room habitacion : habitaciones) {
-                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails()});
+                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotel()});
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
@@ -118,6 +118,11 @@ public class ViewRooms extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         btnReservar.setText("Reservar");
+        btnReservar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReservarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -184,6 +189,10 @@ public class ViewRooms extends javax.swing.JFrame {
             Logger.getLogger(ViewRooms.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
+
+    private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReservarActionPerformed
 
     /**
      * @param args the command line arguments

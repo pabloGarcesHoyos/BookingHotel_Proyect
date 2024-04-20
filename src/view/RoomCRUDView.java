@@ -119,6 +119,18 @@ public class RoomCRUDView extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Precio por noche");
 
+        txtRoomNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRoomNumberKeyTyped(evt);
+            }
+        });
+
+        txtPricePerNight.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPricePerNightKeyTyped(evt);
+            }
+        });
+
         btnRegistrar.setFont(new java.awt.Font("Trebuchet MS", 1, 12)); // NOI18N
         btnRegistrar.setText("Registrar");
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
@@ -158,6 +170,12 @@ public class RoomCRUDView extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("id");
+
+        txtId.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtIdKeyTyped(evt);
+            }
+        });
 
         cbHoteles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cbHoteles.addActionListener(new java.awt.event.ActionListener() {
@@ -265,6 +283,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
         String roomType = txtRoomType.getText();
         int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
         int availability;
+        String hotel = cbHoteles.getSelectedItem().toString();
         String amenitiesDetails = txtAmenitiesDetails.getText();
 
         if (id < 0 || roomNumber < 0 || pricePerNight < 0) {
@@ -288,7 +307,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
             }
         }
          cbHabitacionesActionPerformed();
-        controller.createRoom(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails);
+        controller.createRoom(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel);
     } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "Por favor, asegúrese de ingresar números válidos en los campos numéricos.");
     } catch (SQLException ex) {
@@ -338,6 +357,48 @@ public class RoomCRUDView extends javax.swing.JFrame {
     private void cbHotelesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbHotelesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbHotelesActionPerformed
+
+    private void txtRoomNumberKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRoomNumberKeyTyped
+                int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            evt.consume();
+        }
+
+        if (txtRoomNumber.getText().trim().length() == 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRoomNumberKeyTyped
+
+    private void txtPricePerNightKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPricePerNightKeyTyped
+                int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            evt.consume();
+        }
+
+        if (txtPricePerNight.getText().trim().length() == 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtPricePerNightKeyTyped
+
+    private void txtIdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIdKeyTyped
+                int key = evt.getKeyChar();
+
+        boolean numeros = key >= 48 && key <= 57;
+
+        if (!numeros) {
+            evt.consume();
+        }
+
+        if (txtId.getText().trim().length() == 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtIdKeyTyped
 
     /**
      * @param args the command line arguments
