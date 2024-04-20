@@ -20,6 +20,8 @@ public class UsersHome extends javax.swing.JFrame {
     public UsersHome() {
         initComponents();
         setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        this.dispose();
     }
 
     /**
