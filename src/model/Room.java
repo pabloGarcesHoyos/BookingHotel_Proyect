@@ -9,7 +9,7 @@ package model;
  * @author pablo
  */
 public class Room {
-     
+ 
     private int id;
     private int roomNumber;
     private String roomType;
@@ -73,7 +73,5 @@ public class Room {
     public void setHotel(String hotel) {
         this.hotel = hotel;
     }
-
-
 
 }

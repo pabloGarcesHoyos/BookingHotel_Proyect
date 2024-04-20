@@ -290,21 +290,24 @@ public class RoomCRUDView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-    try {
+  try {
         int id = Integer.parseInt(txtId.getText());
         int roomNumber = Integer.parseInt(txtRoomNumber.getText());
         String roomType = txtRoomType.getText();
         int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
         String amenitiesDetails = txtAmenitiesDetails.getText();
-        String hotel = cbHoteles.getSelectedItem().toString();
+        String hotelName = cbHoteles.getSelectedItem().toString();
 
         if (id < 0 || roomNumber < 0 || pricePerNight < 0) {
             JOptionPane.showMessageDialog(this, "Los campos numéricos deben ser valores positivos.");
             return; 
         }
 
+        // Obtener el ID del hotel seleccionado
+        int hotelId = obtenerIdHotelPorNombre(hotelName);
+
         // Verificar disponibilidad de habitación
-        List<Room> habitacionesDisponibles = obtenerHabitacionesDisponiblesPorHotel(obtenerIdHotelPorNombre(hotel));
+        List<Room> habitacionesDisponibles = obtenerHabitacionesDisponiblesPorHotel(hotelId);
         for (Room room : habitacionesDisponibles) {
             if (room.getRoomNumber() == roomNumber) {
                 JOptionPane.showMessageDialog(this, "La habitación ya está ocupada. Por favor, elija otro número de habitación.");
@@ -313,10 +316,10 @@ public class RoomCRUDView extends javax.swing.JFrame {
         }
 
         // Crear instancia de Room
-        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
+        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotelName);
 
         // Registrar la habitación
-        controller.createRoom(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
+        controller.createRoom(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotelName);
 
         // Actualizar la lista de habitaciones disponibles
         cbHabitacionesActionPerformed();
