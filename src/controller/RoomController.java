@@ -131,7 +131,7 @@ public class RoomController {
                 int availability = resultSet.getInt("availability");
                 String amenitiesDetails = resultSet.getString("amenities_details");
                 String hotel = resultSet.getString("hotel");
-                availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel));
+                availableRooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener las habitaciones disponibles para el hotel: " + e.getMessage());
@@ -151,7 +151,7 @@ public class RoomController {
                 int availability = resultSet.getInt("availability");
                 String amenitiesDetails = resultSet.getString("amenities_details");
                 String hotel = resultSet.getString("hotel");
-                rooms.add(new Room(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel));
+                rooms.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
             }
         } catch (SQLException e) {
             System.out.println("Error al obtener las habitaciones: " + e.getMessage());
@@ -160,24 +160,28 @@ public class RoomController {
     }
 
     public List<Room> getAvailableRoomsForDates(LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
-        List<Room> habitacionesDisponibles = new ArrayList<>();
-        String sql = "SELECT * FROM rooms WHERE id NOT IN (SELECT id_room FROM reservation WHERE fecha_entrada <= ? AND fecha_salida >= ?)";
-        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
-            statement.setDate(1, java.sql.Date.valueOf(fechaSalida));
-            statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int roomNumber = resultSet.getInt("room_number");
-                String roomType = resultSet.getString("room_type");
-                double pricePerNight = resultSet.getDouble("price_per_night");
-                String amenitiesDetails = resultSet.getString("amenities_details");
-                int hotelId = resultSet.getInt("hotel_id");
-                habitacionesDisponibles.add(new Room(id, roomNumber, roomType, pricePerNight, hotelId, amenitiesDetails, sql));
-            }
+    List<Room> habitacionesDisponibles = new ArrayList<>();
+    String sql = "SELECT * FROM rooms WHERE id NOT IN (SELECT id_room FROM reservation WHERE fecha_entrada <= ? AND fecha_salida >= ?)";
+    try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
+        statement.setDate(1, java.sql.Date.valueOf(fechaSalida));
+        statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            int roomNumber = resultSet.getInt("room_number");
+            String roomType = resultSet.getString("room_type");
+            double pricePerNight = resultSet.getDouble("price_per_night");
+            String amenitiesDetails = resultSet.getString("amenities_details");
+            int hotelId = resultSet.getInt("hotel_id");
+            String hotel = resultSet.getString("hotel");
+            habitacionesDisponibles.add(new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel));
         }
-        return habitacionesDisponibles;
+    } catch (SQLException e) {
+        System.out.println("Error al obtener las habitaciones disponibles para las fechas proporcionadas: " + e.getMessage());
+        throw e;
     }
+    return habitacionesDisponibles;
+}
 
     public boolean realizarReserva(int roomId, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         try {

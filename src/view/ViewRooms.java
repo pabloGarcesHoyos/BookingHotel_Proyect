@@ -52,7 +52,7 @@ public class ViewRooms extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = jTable1.getSelectedRow();
         if (selectedRow != -1) {
-            int roomId = (int) jTable1.getValueAt(selectedRow, 0); // Obtener el ID de la habitación seleccionada
+            int roomId = (int) jTable1.getValueAt(selectedRow, 0); 
             LocalDate fechaEntrada = LocalDate.now();
             LocalDate fechaSalida = LocalDate.now().plusDays(1);
 

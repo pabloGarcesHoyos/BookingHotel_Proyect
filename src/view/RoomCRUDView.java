@@ -94,7 +94,6 @@ public class RoomCRUDView extends javax.swing.JFrame {
         btnBuscar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        cbAvailability = new javax.swing.JCheckBox();
         jLabel7 = new javax.swing.JLabel();
         txtAmenitiesDetails = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -166,8 +165,6 @@ public class RoomCRUDView extends javax.swing.JFrame {
             }
         });
 
-        cbAvailability.setText("Disponibilidad");
-
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Detalles de comodidades");
 
@@ -194,14 +191,6 @@ public class RoomCRUDView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnRegistrar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminar))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -222,10 +211,17 @@ public class RoomCRUDView extends javax.swing.JFrame {
                                             .addComponent(txtId, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
                                         .addComponent(txtAmenitiesDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(cbAvailability, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(cbHoteles, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(74, Short.MAX_VALUE))
+                            .addComponent(cbHoteles, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap(87, Short.MAX_VALUE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnRegistrar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBuscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEliminar)
+                        .addContainerGap(300, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -235,8 +231,7 @@ public class RoomCRUDView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbAvailability))
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -295,37 +290,36 @@ public class RoomCRUDView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-    try {
+     try {
         int id = Integer.parseInt(txtId.getText());
         int roomNumber = Integer.parseInt(txtRoomNumber.getText());
         String roomType = txtRoomType.getText();
         int pricePerNight = Integer.parseInt(txtPricePerNight.getText());
-        int availability;
-        String hotel = cbHoteles.getSelectedItem().toString();
         String amenitiesDetails = txtAmenitiesDetails.getText();
+        String hotel = cbHoteles.getSelectedItem().toString();
 
         if (id < 0 || roomNumber < 0 || pricePerNight < 0) {
             JOptionPane.showMessageDialog(this, "Los campos numéricos deben ser valores positivos.");
             return; 
         }
 
-        if (cbAvailability.isSelected()) {
-            availability = 1;
-        } else {
-            availability = 0;
-        }
+        // Crear instancia de Room
+        Room nuevaHabitacion = new Room(id, roomNumber, roomType, pricePerNight, amenitiesDetails, hotel);
 
-        String nombreHotelSeleccionado = cbHoteles.getSelectedItem().toString();
-        int idHotelSeleccionado = obtenerIdHotelPorNombre(nombreHotelSeleccionado);
-        List<Room> habitacionesDisponibles = obtenerHabitacionesDisponiblesPorHotel(idHotelSeleccionado);
+        // Verificar disponibilidad de habitación
+        List<Room> habitacionesDisponibles = obtenerHabitacionesDisponiblesPorHotel(obtenerIdHotelPorNombre(hotel));
         for (Room room : habitacionesDisponibles) {
             if (room.getRoomNumber() == roomNumber) {
                 JOptionPane.showMessageDialog(this, "La habitación ya está ocupada. Por favor, elija otro número de habitación.");
                 return; 
             }
         }
-         cbHabitacionesActionPerformed();
-        controller.createRoom(id, roomNumber, roomType, pricePerNight, availability, amenitiesDetails, hotel);
+
+        // Registrar la habitación
+        controller.createRoom(id, roomNumber, roomType, pricePerNight, ALLBITS, amenitiesDetails, hotel);
+
+        // Actualizar la lista de habitaciones disponibles
+        cbHabitacionesActionPerformed();
     } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this, "Por favor, asegúrese de ingresar números válidos en los campos numéricos.");
     } catch (SQLException ex) {
@@ -473,7 +467,6 @@ public class RoomCRUDView extends javax.swing.JFrame {
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnRegistrar;
-    private javax.swing.JCheckBox cbAvailability;
     private javax.swing.JComboBox<String> cbHoteles;
     private javax.swing.JCheckBoxMenuItem jCheckBoxMenuItem1;
     private javax.swing.JLabel jLabel2;
