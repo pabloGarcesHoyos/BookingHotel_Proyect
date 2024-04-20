@@ -443,7 +443,6 @@ public class VistaHotelesRegistrados extends JFrame {
         JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
     }
 
-
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void txtAdreessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAdreessActionPerformed
