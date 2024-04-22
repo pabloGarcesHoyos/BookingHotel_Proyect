@@ -5,11 +5,12 @@
 package view;
 
 import controller.RoomController;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +18,7 @@ import model.Room;
 
 public class ViewRooms extends javax.swing.JFrame {
 
-     RoomController roomController;
+    RoomController roomController;
 
     public ViewRooms() throws SQLException {
         initComponents();
@@ -26,29 +27,34 @@ public class ViewRooms extends javax.swing.JFrame {
 
         roomController = new RoomController();
 
-        cargarHabitacionesEnTabla();
+        // Agregar las columnas a la tabla
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+        model.addColumn("id");
+        model.addColumn("id hotel");
+        model.addColumn("fecha de entrada");
+        model.addColumn("fecha de salida");
     }
 
-    private void cargarHabitacionesEnTabla() {
+    public void cargarHabitacionesEnTabla() {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
         try {
             List<Room> habitaciones = roomController.getAllRooms();
             for (Room habitacion : habitaciones) {
-                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotelId()});
+                model.addRow(new Object[]{habitacion.getId(), habitacion.getHotelId(), "", ""}); // Agregar filas vacías para las fechas de entrada y salida
             }
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
         }
     }
 
-    void mostrarHabitacionesDisponibles(List<Room> habitaciones) {
+    public void mostrarHabitacionesDisponibles(List<Room> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
         for (Room habitacion : habitaciones) {
-            model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), habitacion.getHotelId()});
+            model.addRow(new Object[]{habitacion.getId(), habitacion.getHotelId(), fechaEntrada, fechaSalida});
         }
     }
 
@@ -80,6 +86,7 @@ public class ViewRooms extends javax.swing.JFrame {
     public void setTblHabitaciones(JTable tblHabitaciones) {
         this.tblHabitaciones = tblHabitaciones;
     }
+
 
     
     @SuppressWarnings("unchecked")
@@ -198,18 +205,17 @@ public class ViewRooms extends javax.swing.JFrame {
 
     private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
         
-             try {
+        try {
             VistaHotelesRegistrados hoteles = new VistaHotelesRegistrados();
             hoteles.setVisible(true);
         } catch (SQLException ex) {
-            Logger.getLogger(RoomCRUDView.class.getName()).log(Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ViewRooms.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-        LocalDate fechaHoy = LocalDate.now();
-
         int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
@@ -217,19 +223,9 @@ public class ViewRooms extends javax.swing.JFrame {
         }
 
         String roomId = tblHabitaciones.getValueAt(selectedRow, 0).toString();
-
-        LocalDate fechaEntrada = LocalDate.now();
-        LocalDate fechaSalida = LocalDate.now().plusDays(1);
-
-        if (fechaSalida.isBefore(fechaEntrada)) {
-            JOptionPane.showMessageDialog(this, "La fecha de salida debe ser posterior a la fecha de entrada.");
-            return;
-        }
-
-        if (fechaEntrada.isBefore(fechaHoy)) {
-            JOptionPane.showMessageDialog(this, "La fecha de entrada no puede ser anterior al día de hoy.");
-            return;
-        }
+        String hotelId = tblHabitaciones.getValueAt(selectedRow, 1).toString();
+        LocalDate fechaEntrada = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 2);
+        LocalDate fechaSalida = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 3);
 
         boolean disponibilidad = roomController.verificarDisponibilidad(Integer.parseInt(roomId), fechaEntrada, fechaSalida);
         if (!disponibilidad) {
@@ -240,12 +236,16 @@ public class ViewRooms extends javax.swing.JFrame {
         boolean reservaExitosa = roomController.realizarReserva(Integer.parseInt(roomId), fechaEntrada, fechaSalida);
         if (reservaExitosa) {
             JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
+
+            // Desaparecer la habitación para las fechas reservadas
+            DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+            model.removeRow(selectedRow);
         } else {
             JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
         }
 
     } catch (NullPointerException ex) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar una habitación y una fecha de entrada en el calendario.");
+        JOptionPane.showMessageDialog(this, "Debe seleccionar una habitación para reservar.");
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
     }
