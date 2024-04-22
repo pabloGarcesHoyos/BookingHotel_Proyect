@@ -68,32 +68,30 @@ public class ViewRooms extends javax.swing.JFrame {
     }
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
-        int selectedRow = tblHabitaciones.getSelectedRow();
-        if (selectedRow != -1) {
-            tblHabitaciones.setRowSelectionInterval(selectedRow, selectedRow);
-            int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
-            int hotelId = (int) tblHabitaciones.getValueAt(selectedRow, 1);
-            LocalDate fechaEntrada = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 2);
-            LocalDate fechaSalida = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 3);
+    int selectedRow = tblHabitaciones.getSelectedRow();
+    if (selectedRow != -1) {
+        int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
+        LocalDate fechaEntrada = LocalDate.parse(txtFechaEntrada.getText());
+        LocalDate fechaSalida = LocalDate.parse(txtFechaSalida.getText());
 
-            txtId.setText(String.valueOf(roomId));
-            txtIdHotel.setText(String.valueOf(hotelId));
-            txtFechaEntrada.setText(fechaEntrada.toString());
-            txtFechaSalida.setText(fechaSalida.toString());
-
-            try {
-                boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
-                if (disponibilidad) {
-                    btnReservar.setVisible(true);
-                } else {
-                    btnReservar.setVisible(false);
-                    JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
-                }
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
+        try {
+            boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+            if (disponibilidad) {
+                txtId.setText(String.valueOf(roomId));
+                txtIdHotel.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 1)));
+                txtFechaEntrada.setText(fechaEntrada.toString());
+                txtFechaSalida.setText(fechaSalida.toString());
+                btnReservar.setVisible(true);
+            } else {
+                btnReservar.setVisible(false);
+                JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
             }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
         }
     }
+}
+
 
     
     @SuppressWarnings("unchecked")
