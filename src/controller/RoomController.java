@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
 import connect.MySQLConnection;
@@ -23,30 +19,30 @@ public class RoomController {
     }
 
     public void createRoom(Room room) throws SQLException {
-    String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, amenities_details, hotel_id) VALUES (?, ?, ?, ?, ?, ?)";
-    try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(createSQL)) {
-        statement.setInt(1, room.getId());
-        statement.setInt(2, room.getRoomNumber());
-        statement.setString(3, room.getRoomType());
-        statement.setDouble(4, room.getPricePerNight());
-        statement.setString(5, room.getAmenitiesDetails());
-        statement.setInt(6, room.getHotelId());
-        int rowsAffected = statement.executeUpdate();
-        if (rowsAffected > 0) {
-            System.out.println("Inserción exitosa");
-        } else {
-            System.out.println("No se pudo insertar los datos");
+        String createSQL = "INSERT INTO rooms (id, room_number, room_type, price_per_night, amenities_details, hotel_id) VALUES (?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(createSQL)) {
+            statement.setInt(1, room.getId());
+            statement.setInt(2, room.getRoomNumber());
+            statement.setString(3, room.getRoomType());
+            statement.setDouble(4, room.getPricePerNight());
+            statement.setString(5, room.getAmenitiesDetails());
+            statement.setInt(6, room.getHotelId());
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Inserción exitosa");
+            } else {
+                System.out.println("No se pudo insertar los datos");
+            }
+        } catch (SQLException e) {
+            System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
     }
-}
 
 
     public boolean verificarDisponibilidad(int roomId, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         boolean disponibilidad = true;
         // Verificar si hay reservas para la habitación en las fechas proporcionadas
-        String sql = "SELECT * FROM reservation WHERE id_room = ? AND ((fecha_entrada >= ? AND fecha_entrada < ?) OR (fecha_salida > ? AND fecha_salida <= ?))";
+        String sql = "SELECT * FROM reservation WHERE room_id = ? AND ((check_in_date >= ? AND check_in_date < ?) OR (check_out_date > ? AND check_out_date <= ?))";
         try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
             statement.setInt(1, roomId);
             statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
@@ -159,7 +155,7 @@ public class RoomController {
 
     public List<Room> getAvailableRoomsForDates(LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         List<Room> habitacionesDisponibles = new ArrayList<>();
-        String sql = "SELECT * FROM rooms WHERE id NOT IN (SELECT id_room FROM reservation WHERE fecha_entrada <= ? AND fecha_salida >= ?)";
+        String sql = "SELECT * FROM rooms WHERE id NOT IN (SELECT room_id FROM reservation WHERE check_in_date <= ? AND check_out_date >= ?)";
         try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
             statement.setDate(1, java.sql.Date.valueOf(fechaSalida));
             statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
@@ -189,7 +185,7 @@ public class RoomController {
                 return false;
             }
 
-            String insertSQL = "INSERT INTO reservation (id_room, fecha_entrada, fecha_salida) VALUES (?, ?, ?)";
+            String insertSQL = "INSERT INTO reservation (room_id, check_in_date, check_out_date) VALUES (?, ?, ?)";
             try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(insertSQL)) {
                 statement.setInt(1, roomId);
                 statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));

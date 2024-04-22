@@ -5,11 +5,9 @@
 package view;
 
 import controller.RoomController;
-import java.lang.System.Logger;
-import java.lang.System.Logger.Level;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -237,7 +235,6 @@ public class ViewRooms extends javax.swing.JFrame {
         if (reservaExitosa) {
             JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
 
-            // Desaparecer la habitación para las fechas reservadas
             DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
             model.removeRow(selectedRow);
         } else {
