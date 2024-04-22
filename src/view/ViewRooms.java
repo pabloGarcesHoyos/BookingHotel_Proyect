@@ -71,8 +71,14 @@ public class ViewRooms extends javax.swing.JFrame {
         if (selectedRow != -1) {
             tblHabitaciones.setRowSelectionInterval(selectedRow, selectedRow);
             int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
-            LocalDate fechaEntrada = LocalDate.now();
-            LocalDate fechaSalida = LocalDate.now().plusDays(1);
+            int hotelId = (int) tblHabitaciones.getValueAt(selectedRow, 1);
+            LocalDate fechaEntrada = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 2);
+            LocalDate fechaSalida = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 3);
+
+            txtId.setText(String.valueOf(roomId));
+            txtIdHotel.setText(String.valueOf(hotelId));
+            txtFechaEntrada.setText(fechaEntrada.toString());
+            txtFechaSalida.setText(fechaSalida.toString());
 
             try {
                 boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
@@ -88,7 +94,6 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -101,6 +106,10 @@ public class ViewRooms extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHabitaciones = new javax.swing.JTable();
         btnReservar = new javax.swing.JButton();
+        txtId = new javax.swing.JTextField();
+        txtIdHotel = new javax.swing.JTextField();
+        txtFechaEntrada = new javax.swing.JTextField();
+        txtFechaSalida = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
@@ -163,8 +172,18 @@ public class ViewRooms extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnReservar)
+                .addGap(31, 31, 31)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtIdHotel, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addComponent(btnReservar))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFechaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtFechaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -176,8 +195,19 @@ public class ViewRooms extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(btnReservar)))
+                        .addGap(34, 34, 34)
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addComponent(btnReservar))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(txtIdHotel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(19, 19, 19)
+                        .addComponent(txtFechaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtFechaSalida, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(0, 23, Short.MAX_VALUE))
         );
 
@@ -225,15 +255,9 @@ public class ViewRooms extends javax.swing.JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-            int selectedRow = tblHabitaciones.getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
-                return;
-            }
-
-            int roomId = Integer.parseInt(tblHabitaciones.getValueAt(selectedRow, 0).toString());
-            LocalDate fechaEntrada = vistaHotelesRegistrados.getjDateChooser2().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate fechaSalida = vistaHotelesRegistrados.getjDateChooser1().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            int roomId = Integer.parseInt(txtId.getText());
+            LocalDate fechaEntrada = LocalDate.parse(txtFechaEntrada.getText());
+            LocalDate fechaSalida = LocalDate.parse(txtFechaSalida.getText());
 
             boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
             if (!disponibilidad) {
@@ -245,16 +269,16 @@ public class ViewRooms extends javax.swing.JFrame {
             if (reservaExitosa) {
                 JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
                 DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-                model.removeRow(selectedRow);
+                model.removeRow(tblHabitaciones.getSelectedRow());
+                limpiarCampos();
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
             }
 
-        } catch (NullPointerException ex) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar una habitación para reservar.");
-        } catch (SQLException ex) {
+        } catch (NumberFormatException | SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
-        }
+        
+}
     
     }//GEN-LAST:event_btnReservarActionPerformed
 
@@ -265,7 +289,12 @@ public class ViewRooms extends javax.swing.JFrame {
     public JTable getTblHabitaciones() {
         return tblHabitaciones;
     }
-
+private void limpiarCampos() {
+        txtId.setText("");
+        txtIdHotel.setText("");
+        txtFechaEntrada.setText("");
+        txtFechaSalida.setText("");
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -312,5 +341,9 @@ public class ViewRooms extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblHabitaciones;
+    private javax.swing.JTextField txtFechaEntrada;
+    private javax.swing.JTextField txtFechaSalida;
+    private javax.swing.JTextField txtId;
+    private javax.swing.JTextField txtIdHotel;
     // End of variables declaration//GEN-END:variables
 }
