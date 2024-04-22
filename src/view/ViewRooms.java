@@ -28,12 +28,14 @@ public class ViewRooms extends javax.swing.JFrame {
 
         roomController = new RoomController();
 
-        // Agregar las columnas a la tabla
-        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-        model.addColumn("id");
-        model.addColumn("id hotel");
-        model.addColumn("fecha de entrada");
-        model.addColumn("fecha de salida");
+        
+
+        // Agregar evento para detectar clics en la tabla
+        tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
     }
 
     public void cargarHabitacionesEnTabla() {
@@ -59,10 +61,10 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 
-    public void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow != -1) {
-            int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0); 
+            int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
             LocalDate fechaEntrada = LocalDate.now();
             LocalDate fechaSalida = LocalDate.now().plusDays(1);
 
@@ -78,14 +80,6 @@ public class ViewRooms extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
             }
         }
-    }
-
-    public JTable getTblHabitaciones() {
-        return tblHabitaciones;
-    }
-
-    public void setTblHabitaciones(JTable tblHabitaciones) {
-        this.tblHabitaciones = tblHabitaciones;
     }
 
 
@@ -135,9 +129,17 @@ public class ViewRooms extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Id ", "Id Hotel", "Fecha de entrada", "Fecha de salida"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblHabitaciones);
 
         btnReservar.setText("Reservar");
@@ -153,11 +155,11 @@ public class ViewRooms extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnReservar)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,7 +170,7 @@ public class ViewRooms extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
+                        .addGap(90, 90, 90)
                         .addComponent(btnReservar)))
                 .addGap(0, 23, Short.MAX_VALUE))
         );
@@ -216,7 +218,7 @@ public class ViewRooms extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-    try {
+     try {
         int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
@@ -253,12 +255,17 @@ public class ViewRooms extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    
+    public JTable getTblHabitaciones() {
+        return tblHabitaciones;
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+        * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+        */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
