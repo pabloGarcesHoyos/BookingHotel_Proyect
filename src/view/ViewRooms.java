@@ -10,6 +10,7 @@ import controller.RoomController;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -255,31 +256,36 @@ public class ViewRooms extends javax.swing.JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-            int roomId = Integer.parseInt(txtId.getText());
-            LocalDate fechaEntrada = LocalDate.parse(txtFechaEntrada.getText());
-            LocalDate fechaSalida = LocalDate.parse(txtFechaSalida.getText());
+        int selectedRow = tblHabitaciones.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
+            return;
+        }
 
-            boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
-            if (!disponibilidad) {
-                JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
-                return;
-            }
+        int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
+        LocalDate fechaEntrada = LocalDate.parse(txtFechaEntrada.getText());
+        LocalDate fechaSalida = LocalDate.parse(txtFechaSalida.getText());
 
-            boolean reservaExitosa = roomController.realizarReserva(roomId, fechaEntrada, fechaSalida);
-            if (reservaExitosa) {
-                JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
-                DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-                model.removeRow(tblHabitaciones.getSelectedRow());
-                limpiarCampos();
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
-            }
+        boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+        if (!disponibilidad) {
+            JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+            return;
+        }
 
-        } catch (NumberFormatException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
-        
-}
-    
+        boolean reservaExitosa = roomController.realizarReserva(roomId, fechaEntrada, fechaSalida);
+        if (reservaExitosa) {
+            JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
+            DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+            model.removeRow(selectedRow);
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
+        }
+
+    } catch (DateTimeParseException | SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
+    }
+
     }//GEN-LAST:event_btnReservarActionPerformed
 
     /**
