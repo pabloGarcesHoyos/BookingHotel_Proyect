@@ -1,4 +1,4 @@
-package View;
+package view;
 
 import controller.HotelController;
 import controller.RoomController;
@@ -40,7 +40,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             }
         });
 
-        btnReservar.setVisible(false);
+        btnReservar.setVisible(true);
         jDateChooser1.setDate(new java.util.Date());
         jDateChooser2.setDate(new java.util.Date());
     }
@@ -78,7 +78,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     }
 
     private void llenarTablaHabitaciones(int hotelId) {
-        DefaultTableModel model = (DefaultTableModel) rooms.tblHabitaciones.getModel();
+        DefaultTableModel model = (DefaultTableModel) rooms.getTblHabitaciones().getModel();
         model.setRowCount(0);
         try {
             List<Room> rooms = roomController.getAvailableRoomsForHotel(hotelId);

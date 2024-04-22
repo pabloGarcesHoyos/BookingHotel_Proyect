@@ -4,7 +4,6 @@
  */
 package view;
 
-import View.VistaHotelesRegistrados;
 import controller.RoomController;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -44,7 +43,7 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 
-    private void mostrarHabitacionesDisponibles(List<Room> habitaciones) {
+    void mostrarHabitacionesDisponibles(List<Room> habitaciones) {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 

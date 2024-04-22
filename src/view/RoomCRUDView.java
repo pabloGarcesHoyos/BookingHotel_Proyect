@@ -4,7 +4,6 @@
  */
 package view;
 
-import View.VistaHotelesRegistrados;
 import controller.HotelController;
 import controller.RoomController;
 import controller.UserController;
