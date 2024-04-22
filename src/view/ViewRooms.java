@@ -28,7 +28,12 @@ public class ViewRooms extends javax.swing.JFrame {
 
         roomController = new RoomController();
 
-        
+        // Agregar las columnas a la tabla
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+        model.addColumn("id");
+        model.addColumn("id hotel");
+        model.addColumn("fecha de entrada");
+        model.addColumn("fecha de salida");
 
         // Agregar evento para detectar clics en la tabla
         tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -64,6 +69,7 @@ public class ViewRooms extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
         int selectedRow = tblHabitaciones.getSelectedRow();
         if (selectedRow != -1) {
+            tblHabitaciones.setRowSelectionInterval(selectedRow, selectedRow);
             int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
             LocalDate fechaEntrada = LocalDate.now();
             LocalDate fechaSalida = LocalDate.now().plusDays(1);
@@ -219,36 +225,37 @@ public class ViewRooms extends javax.swing.JFrame {
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
     try {
-        int selectedRow = tblHabitaciones.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
-            return;
+            int selectedRow = tblHabitaciones.getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Seleccione una habitación para reservar.");
+                return;
+            }
+
+            int roomId = Integer.parseInt(tblHabitaciones.getValueAt(selectedRow, 0).toString());
+            LocalDate fechaEntrada = vistaHotelesRegistrados.getjDateChooser2().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate fechaSalida = vistaHotelesRegistrados.getjDateChooser1().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+            if (!disponibilidad) {
+                JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+                return;
+            }
+
+            boolean reservaExitosa = roomController.realizarReserva(roomId, fechaEntrada, fechaSalida);
+            if (reservaExitosa) {
+                JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
+                DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+                model.removeRow(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
+            }
+
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una habitación para reservar.");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
         }
-
-        int roomId = Integer.parseInt(tblHabitaciones.getValueAt(selectedRow, 0).toString());
-        LocalDate fechaEntrada = vistaHotelesRegistrados.getjDateChooser2().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate fechaSalida = vistaHotelesRegistrados.getjDateChooser1().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-        boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
-        if (!disponibilidad) {
-            JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
-            return;
-        }
-
-        boolean reservaExitosa = roomController.realizarReserva(roomId, fechaEntrada, fechaSalida);
-        if (reservaExitosa) {
-            JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
-            DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-            model.removeRow(selectedRow);
-        } else {
-            JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
-        }
-
-    } catch (NullPointerException ex) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar una habitación para reservar.");
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
-    }
+    
     }//GEN-LAST:event_btnReservarActionPerformed
 
     /**
