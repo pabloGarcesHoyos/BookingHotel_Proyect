@@ -4,10 +4,12 @@
  */
 package view;
 
+import com.toedter.calendar.JDateChooser;
 import controller.RoomController;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -17,6 +19,7 @@ import model.Room;
 public class ViewRooms extends javax.swing.JFrame {
 
     RoomController roomController;
+    VistaHotelesRegistrados vistaHotelesRegistrados;
 
     public ViewRooms() throws SQLException {
         initComponents();
@@ -220,21 +223,19 @@ public class ViewRooms extends javax.swing.JFrame {
             return;
         }
 
-        String roomId = tblHabitaciones.getValueAt(selectedRow, 0).toString();
-        String hotelId = tblHabitaciones.getValueAt(selectedRow, 1).toString();
-        LocalDate fechaEntrada = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 2);
-        LocalDate fechaSalida = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 3);
+        int roomId = Integer.parseInt(tblHabitaciones.getValueAt(selectedRow, 0).toString());
+        LocalDate fechaEntrada = vistaHotelesRegistrados.getjDateChooser2().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate fechaSalida = vistaHotelesRegistrados.getjDateChooser1().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        boolean disponibilidad = roomController.verificarDisponibilidad(Integer.parseInt(roomId), fechaEntrada, fechaSalida);
+        boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
         if (!disponibilidad) {
             JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
             return;
         }
 
-        boolean reservaExitosa = roomController.realizarReserva(Integer.parseInt(roomId), fechaEntrada, fechaSalida);
+        boolean reservaExitosa = roomController.realizarReserva(roomId, fechaEntrada, fechaSalida);
         if (reservaExitosa) {
             JOptionPane.showMessageDialog(this, "Reserva realizada exitosamente.");
-
             DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
             model.removeRow(selectedRow);
         } else {

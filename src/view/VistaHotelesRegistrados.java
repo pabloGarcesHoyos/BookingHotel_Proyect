@@ -1,5 +1,6 @@
 package view;
 
+import com.toedter.calendar.JDateChooser;
 import controller.HotelController;
 import controller.RoomController;
 import java.io.FileWriter;
@@ -106,7 +107,11 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error al escribir en el archivo: " + ex.getMessage());
             }
         }
+        
     }
+
+    
+    
 
 
 
@@ -471,7 +476,13 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     
     }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
-    
+    public JDateChooser getjDateChooser1() {
+        return jDateChooser1;
+    }
+
+    public JDateChooser getjDateChooser2() {
+        return jDateChooser2;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
