@@ -225,9 +225,23 @@ public class ViewRooms extends javax.swing.JFrame {
             return;
         }
 
-        int roomId = Integer.parseInt(tblHabitaciones.getValueAt(selectedRow, 0).toString());
-        LocalDate fechaEntrada = vistaHotelesRegistrados.getjDateChooser2().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate fechaSalida = vistaHotelesRegistrados.getjDateChooser1().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Object roomIdObject = tblHabitaciones.getValueAt(selectedRow, 0);
+        if (roomIdObject == null) {
+            JOptionPane.showMessageDialog(this, "No se pudo obtener la información de la habitación seleccionada.");
+            return;
+        }
+        
+        int roomId = Integer.parseInt(roomIdObject.toString());
+        Object checkInDateObject = tblHabitaciones.getValueAt(selectedRow, 2);
+        Object checkOutDateObject = tblHabitaciones.getValueAt(selectedRow, 3);
+        
+        if (checkInDateObject == null || checkOutDateObject == null) {
+            JOptionPane.showMessageDialog(this, "No se pudieron obtener las fechas de la habitación seleccionada.");
+            return;
+        }
+
+        LocalDate fechaEntrada = ((java.util.Date) checkInDateObject).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate fechaSalida = ((java.util.Date) checkOutDateObject).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
         if (!disponibilidad) {
@@ -244,10 +258,29 @@ public class ViewRooms extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "No se pudo realizar la reserva. Por favor, intente nuevamente.");
         }
 
-    } catch (NullPointerException ex) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar una habitación para reservar.");
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this, "Error al obtener el ID de la habitación: " + ex.getMessage());
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
+    }
+}
+
+private void tblHabitacionesMouseClicked(java.awt.event.MouseEvent evt) {                                              
+    int selectedRow = tblHabitaciones.getSelectedRow();
+    if (selectedRow != -1) {
+        Object checkInDateObject = tblHabitaciones.getValueAt(selectedRow, 2);
+        Object checkOutDateObject = tblHabitaciones.getValueAt(selectedRow, 3);
+
+        if (checkInDateObject == null || checkOutDateObject == null) {
+            JOptionPane.showMessageDialog(this, "No se pudieron obtener las fechas de la habitación seleccionada.");
+            return;
+        }
+
+        JDateChooser fechaEntrada = vistaHotelesRegistrados.getjDateChooser2();
+        JDateChooser fechaSalida = vistaHotelesRegistrados.getjDateChooser1();
+
+        fechaEntrada.setDate((java.util.Date) checkInDateObject);
+        fechaSalida.setDate((java.util.Date) checkOutDateObject);
     }
 
     }//GEN-LAST:event_btnReservarActionPerformed
