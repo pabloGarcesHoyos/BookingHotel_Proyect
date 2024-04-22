@@ -4,6 +4,7 @@
  */
 package view;
 
+import View.VistaHotelesRegistrados;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -238,10 +239,10 @@ public class UsersHome extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            VistaHotelesRegistrados Hoteles = new VistaHotelesRegistrados();
-            Hoteles.setVisible(true);
+            VistaHotelesRegistrados hoteles= new VistaHotelesRegistrados();
+            hoteles.setVisible(true);
         } catch (SQLException ex) {
-            Logger.getLogger(HotelCRUDView.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersHome.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
