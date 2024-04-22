@@ -15,14 +15,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import model.Hotel;
 import model.Room;
-import view.ViewLogin;
-import view.ViewRooms;
 
 public class VistaHotelesRegistrados extends javax.swing.JFrame {
 
     private final RoomController roomController;
     private final HotelController hotelController;
-    ViewRooms rooms;
+    private final ViewRooms rooms;
 
     public VistaHotelesRegistrados() throws SQLException {
         initComponents();
@@ -80,7 +78,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     }
 
     private void llenarTablaHabitaciones(int hotelId) {
-        DefaultTableModel model = (DefaultTableModel) rooms.getTblHabitaciones().getModel();
+        DefaultTableModel model = (DefaultTableModel) rooms.tblHabitaciones.getModel();
         model.setRowCount(0);
         try {
             List<Room> rooms = roomController.getAvailableRoomsForHotel(hotelId);
@@ -88,7 +86,6 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                 model.addRow(new Object[]{room.getId(), room.getRoomNumber(), room.getRoomType(), room.getPricePerNight(), room.getAmenitiesDetails(), room.getHotelId()});
             }
             
-            // Escribir los datos de las habitaciones en archivos de texto
             escribirDatosEnArchivo(rooms);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones del hotel: " + ex.getMessage());
@@ -110,6 +107,8 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             }
         }
     }
+
+
 
     
     @SuppressWarnings("unchecked")
@@ -483,8 +482,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAdreessActionPerformed
 
     private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
-    ViewLogin login = new ViewLogin();
-    login.setVisible(true);
+    
     }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
     

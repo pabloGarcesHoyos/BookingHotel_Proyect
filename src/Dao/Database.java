@@ -18,7 +18,7 @@ import singleton.DatabaseSingleton;
 
 public class Database {
 
-    ///////Singleton
+    //Singleton
     private Connection connection;
 
     public Database() {

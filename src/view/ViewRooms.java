@@ -18,7 +18,7 @@ import model.Room;
 
 public class ViewRooms extends javax.swing.JFrame {
 
-    private final RoomController roomController;
+     RoomController roomController;
 
     public ViewRooms() throws SQLException {
         initComponents();
@@ -30,7 +30,7 @@ public class ViewRooms extends javax.swing.JFrame {
         cargarHabitacionesEnTabla();
     }
 
-    public void cargarHabitacionesEnTabla() {
+    private void cargarHabitacionesEnTabla() {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
@@ -44,7 +44,7 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 
-    public void mostrarHabitacionesDisponibles(List<Room> habitaciones) {
+    private void mostrarHabitacionesDisponibles(List<Room> habitaciones) {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
         model.setRowCount(0); // Limpiar la tabla antes de cargar los datos
 
