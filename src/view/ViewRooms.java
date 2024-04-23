@@ -35,41 +35,47 @@ public class ViewRooms extends javax.swing.JFrame {
     }
 
     public void cargarHabitacionesEnTabla() {
-        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-        model.setRowCount(0);
+    DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+    model.setRowCount(0);
 
-        try {
-            List<Room> habitaciones = roomController.getAllRooms();
-            for (Room habitacion : habitaciones) {
-                model.addRow(new Object[]{habitacion.getId(), habitacion.getHotelId(), "", ""});
-            }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
-        }
-    }
-
-    public void mostrarHabitacionesDisponibles(List<Room> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
-        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-        model.setRowCount(0);
-
+    try {
+        List<Room> habitaciones = roomController.getAllRooms();
         for (Room habitacion : habitaciones) {
-            model.addRow(new Object[]{habitacion.getId(), habitacion.getHotelId(), fechaEntrada, fechaSalida});
+            model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails()});
         }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
     }
+}
 
-   private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+public void mostrarHabitacionesDisponibles(List<Room> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
+    DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+    model.setRowCount(0);
+
+    for (Room habitacion : habitaciones) {
+        model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails()});
+    }
+}
+
+private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
     int selectedRow = tblHabitaciones.getSelectedRow();
     if (selectedRow != -1) {
         int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
-        int hotelId = (int) tblHabitaciones.getValueAt(selectedRow, 1); // Obtener el ID del hotel
-        LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 2).toString());
-        LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 3).toString());
+        int roomNumber = (int) tblHabitaciones.getValueAt(selectedRow, 1);
+        String roomType = (String) tblHabitaciones.getValueAt(selectedRow, 2);
+        double pricePerNight = (double) tblHabitaciones.getValueAt(selectedRow, 3);
+        String amenitiesDetails = (String) tblHabitaciones.getValueAt(selectedRow, 4);
+        LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 5).toString());
+        LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 6).toString());
 
         try {
             boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
             if (disponibilidad) {
                 txtId.setText(String.valueOf(roomId));
-                txtIdHotel.setText(String.valueOf(hotelId));
+                txtRoomNumber.setText(String.valueOf(roomNumber));
+                txtRoomType.setText(roomType);
+                txtPricePerNight.setText(String.valueOf(pricePerNight));
+                txtAmenitiesDetails.setText(amenitiesDetails);
                 txtFechaEntrada.setText(fechaEntrada.toString());
                 txtFechaSalida.setText(fechaSalida.toString());
                 btnReservar.setVisible(true);
@@ -94,14 +100,17 @@ public class ViewRooms extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblHabitaciones = new javax.swing.JTable();
         btnReservar = new javax.swing.JButton();
-        txtId = new javax.swing.JTextField();
-        txtIdHotel = new javax.swing.JTextField();
+        txtRoomNumber = new javax.swing.JTextField();
+        txtRoomType = new javax.swing.JTextField();
         txtFechaEntrada = new javax.swing.JTextField();
         txtFechaSalida = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        txtPricePerNight = new javax.swing.JTextField();
+        txtAmenitiesDetails = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jCheckBoxMenuItem2 = new javax.swing.JCheckBoxMenuItem();
@@ -159,9 +168,9 @@ public class ViewRooms extends javax.swing.JFrame {
             }
         });
 
-        txtId.setEditable(false);
+        txtRoomNumber.setEditable(false);
 
-        txtIdHotel.setEditable(false);
+        txtRoomType.setEditable(false);
 
         txtFechaEntrada.setEditable(false);
 
@@ -179,6 +188,18 @@ public class ViewRooms extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Trebuchet MS", 1, 14)); // NOI18N
         jLabel4.setText("Fecha de salida");
 
+        txtPricePerNight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPricePerNightActionPerformed(evt);
+            }
+        });
+
+        txtId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -189,20 +210,31 @@ public class ViewRooms extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 533, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(btnReservar)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
-                            .addComponent(txtId)
+                            .addComponent(txtRoomNumber)
                             .addComponent(txtFechaEntrada)
                             .addComponent(jLabel4)
                             .addComponent(txtFechaSalida)
-                            .addComponent(txtIdHotel)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(btnReservar)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                            .addComponent(txtRoomType))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtPricePerNight, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtAmenitiesDetails, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(37, 37, 37))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,13 +245,19 @@ public class ViewRooms extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel2)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtRoomNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(txtPricePerNight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIdHotel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel3)
+                        .addComponent(txtRoomType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(txtAmenitiesDetails, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtFechaEntrada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -279,21 +317,15 @@ public class ViewRooms extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-     int selectedRow = tblHabitaciones.getSelectedRow();
+   int selectedRow = tblHabitaciones.getSelectedRow();
     if (selectedRow != -1) {
         int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
-        LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 2).toString());
-        LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 3).toString());
+        LocalDate fechaEntrada = LocalDate.parse(txtFechaEntrada.getText());
+        LocalDate fechaSalida = LocalDate.parse(txtFechaSalida.getText());
 
         try {
             boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
             if (disponibilidad) {
-                txtId.setText(String.valueOf(roomId));
-                txtIdHotel.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 1)));
-                txtFechaEntrada.setText(fechaEntrada.toString());
-                txtFechaSalida.setText(fechaSalida.toString());
-
-                // Aquí realizamos la reserva
                 roomController.reservarHabitacion(roomId, fechaEntrada, fechaSalida);
 
                 JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
@@ -306,18 +338,27 @@ public class ViewRooms extends javax.swing.JFrame {
             }
             
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
         }
     }
 
 
+
     }//GEN-LAST:event_btnReservarActionPerformed
+
+    private void txtPricePerNightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPricePerNightActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPricePerNightActionPerformed
+
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdActionPerformed
     public JTable getTblHabitaciones() {
         return tblHabitaciones;
     }
 private void limpiarCampos() {
-        txtId.setText("");
-        txtIdHotel.setText("");
+        txtRoomNumber.setText("");
+        txtRoomType.setText("");
         txtFechaEntrada.setText("");
         txtFechaSalida.setText("");
     }
@@ -371,9 +412,12 @@ private void limpiarCampos() {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblHabitaciones;
+    private javax.swing.JTextField txtAmenitiesDetails;
     private javax.swing.JTextField txtFechaEntrada;
     private javax.swing.JTextField txtFechaSalida;
     private javax.swing.JTextField txtId;
-    private javax.swing.JTextField txtIdHotel;
+    private javax.swing.JTextField txtPricePerNight;
+    private javax.swing.JTextField txtRoomNumber;
+    private javax.swing.JTextField txtRoomType;
     // End of variables declaration//GEN-END:variables
 }

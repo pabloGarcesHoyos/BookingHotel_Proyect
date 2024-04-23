@@ -33,7 +33,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         rooms = new ViewRooms();
 
         llenarTablaHoteles();
-        this.dispose();
+        
 
         tblHoteles.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -67,7 +67,6 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             int hotelId = (int) tblHoteles.getValueAt(selectedRow, 0);
             llenarTablaHabitaciones(hotelId);
 
-            // Obtener los detalles del hotel seleccionado y mostrarlos en los campos de texto
             Hotel hotel = hotelController.getHotelById(hotelId);
             txtId.setText(String.valueOf(hotel.getId()));
             txtAdreess.setText(hotel.getAddress());
@@ -93,7 +92,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones del hotel: " + ex.getMessage());
         }
     }
-
+    
     private void escribirDatosEnArchivo(List<Room> rooms) {
         for (Room room : rooms) {
             String nombreArchivo = "habitacion_" + room.getRoomNumber() + ".txt";
@@ -110,12 +109,6 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         }
         
     }
-
-    
-    
-
-
-
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
