@@ -5,7 +5,6 @@
 package view;
 
 import controller.RoomController;
-
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,77 +18,83 @@ public class ViewRooms extends javax.swing.JFrame {
     RoomController roomController;
 
     public ViewRooms() throws SQLException {
-    initComponents();
-    setLocationRelativeTo(this);
-    setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
+        initComponents();
+        setLocationRelativeTo(this);
+        setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
-    roomController = new RoomController();
+        roomController = new RoomController();
 
-    DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-    // Cambiar los nombres de las columnas
-    model.setColumnIdentifiers(new Object[]{"ID", "Número de Habitación", "Tipo de Habitación", "Precio por Noche", "Detalles de Amenidades", "fechaEntrada", "fechaSalida"});
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+        model.setColumnIdentifiers(new Object[]{"ID", "Número de Habitación", "Tipo de Habitación", "Precio por Noche", "Detalles de Amenidades", "Fecha de Entrada", "Fecha de Salida"});
 
-    tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
-        public void mouseClicked(java.awt.event.MouseEvent evt) {
-            jTable1MouseClicked(evt);
-        }
-    });
-}
+        tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
 
-public void cargarHabitacionesEnTabla() {
-    DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-    model.setRowCount(0);
-
-    try {
-        List<Room> habitaciones = roomController.getAllRooms();
-        for (Room habitacion : habitaciones) {
-            model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails()});
-        }
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
+        cargarHabitacionesEnTabla();
     }
-}
 
-public void mostrarHabitacionesDisponibles(List<Room> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
-    DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-    model.setRowCount(0);
-
-    for (Room habitacion : habitaciones) {
-        model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails()});
-    }
-}
-
-private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
-    int selectedRow = tblHabitaciones.getSelectedRow();
-    if (selectedRow != -1) {
-        int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
-        int roomNumber = (int) tblHabitaciones.getValueAt(selectedRow, 1);
-        String roomType = (String) tblHabitaciones.getValueAt(selectedRow, 2);
-        double pricePerNight = (double) tblHabitaciones.getValueAt(selectedRow, 3);
-        String amenitiesDetails = (String) tblHabitaciones.getValueAt(selectedRow, 4);
-        LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 5).toString());
-        LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 6).toString());
+    public void cargarHabitacionesEnTabla() {
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+        model.setRowCount(0);
 
         try {
-            boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
-            if (disponibilidad) {
-                txtId.setText(String.valueOf(roomId));
-                txtRoomNumber.setText(String.valueOf(roomNumber));
-                txtRoomType.setText(roomType);
-                txtPricePerNight.setText(String.valueOf(pricePerNight));
-                txtAmenitiesDetails.setText(amenitiesDetails);
-                txtFechaEntrada.setText(fechaEntrada.toString());
-                txtFechaSalida.setText(fechaSalida.toString());
-                btnReservar.setVisible(true);
-            } else {
-                btnReservar.setVisible(false);
-                JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+            List<Room> habitaciones = roomController.getAllRooms();
+            for (Room habitacion : habitaciones) {
+                model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), "", ""});
             }
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones: " + ex.getMessage());
         }
     }
-}
+
+    public void mostrarHabitacionesDisponibles(List<Room> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
+        DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
+        model.setRowCount(0);
+
+        for (Room habitacion : habitaciones) {
+            model.addRow(new Object[]{habitacion.getId(), habitacion.getRoomNumber(), habitacion.getRoomType(), habitacion.getPricePerNight(), habitacion.getAmenitiesDetails(), fechaEntrada, fechaSalida});
+        }
+    }
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
+        int selectedRow = tblHabitaciones.getSelectedRow();
+        if (selectedRow != -1) {
+            int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
+            int roomNumber = (int) tblHabitaciones.getValueAt(selectedRow, 1);
+            String roomType = (String) tblHabitaciones.getValueAt(selectedRow, 2);
+            double pricePerNight = (double) tblHabitaciones.getValueAt(selectedRow, 3);
+            String amenitiesDetails = (String) tblHabitaciones.getValueAt(selectedRow, 4);
+            LocalDate fechaEntrada = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 5);
+            LocalDate fechaSalida = (LocalDate) tblHabitaciones.getValueAt(selectedRow, 6);
+
+            if (fechaEntrada != null && fechaSalida != null) {
+                try {
+                    boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+                    if (disponibilidad) {
+                        txtId.setText(String.valueOf(roomId));
+                        txtRoomNumber.setText(String.valueOf(roomNumber));
+                        txtRoomType.setText(roomType);
+                        txtPricePerNight.setText(String.valueOf(pricePerNight));
+                        txtAmenitiesDetails.setText(amenitiesDetails);
+                        txtFechaEntrada.setText(fechaEntrada.toString());
+                        txtFechaSalida.setText(fechaSalida.toString());
+                        btnReservar.setVisible(true);
+                    } else {
+                        btnReservar.setVisible(false);
+                        JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor, seleccione una habitación con fechas de entrada y salida válidas.");
+            }
+        }
+    }
+
 
 
     @SuppressWarnings("unchecked")
@@ -337,12 +342,10 @@ private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
                 txtFechaEntrada.setText(fechaEntrada.toString());
                 txtFechaSalida.setText(fechaSalida.toString());
 
-                // Aquí realizamos la reserva
                 roomController.reservarHabitacion(roomId, fechaEntrada, fechaSalida);
 
                 JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
 
-                // Ocultamos el botón después de reservar
                 btnReservar.setVisible(false);
             } else {
                 btnReservar.setVisible(false);
