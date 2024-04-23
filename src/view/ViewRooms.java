@@ -27,7 +27,7 @@ public class ViewRooms extends javax.swing.JFrame {
 
     DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
     // Cambiar los nombres de las columnas
-    model.setColumnIdentifiers(new Object[]{"ID", "Número de Habitación", "Tipo de Habitación", "Precio por Noche", "Detalles de Amenidades"});
+    model.setColumnIdentifiers(new Object[]{"ID", "Número de Habitación", "Tipo de Habitación", "Precio por Noche", "Detalles de Amenidades", "fechaEntrada", "fechaSalida"});
 
     tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
         public void mouseClicked(java.awt.event.MouseEvent evt) {
