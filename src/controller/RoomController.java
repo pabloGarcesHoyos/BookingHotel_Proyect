@@ -1,14 +1,14 @@
 package controller;
 
 import connect.MySQLConnection;
-import model.Room;
-
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import model.Room;
 
 public class RoomController {
 
@@ -37,7 +37,6 @@ public class RoomController {
             System.out.println("Ocurrió un error al realizar la inserción en la base de datos: " + e.getMessage());
         }
     }
-
 
     public boolean verificarDisponibilidad(int roomId, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
         boolean disponibilidad = true;
@@ -203,4 +202,31 @@ public class RoomController {
             throw e;
         }
     }
+
+   public void reservarHabitacion(int roomId, LocalDate fechaEntrada, LocalDate fechaSalida) throws SQLException {
+    try {
+        // Verificar la disponibilidad de la habitación
+        boolean disponibilidad = verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+        if (disponibilidad) {
+            // Verificar que la habitación exista
+            if (readRoom(roomId) == null) {
+                System.out.println("La habitación con ID " + roomId + " no existe en la base de datos.");
+                return;
+            }
+            String sql = "INSERT INTO reservation (room_id, check_in_date, check_out_date) VALUES (?, ?, ?)";
+            try (PreparedStatement statement = connection.conectarMySQL().prepareStatement(sql)) {
+                statement.setInt(1, roomId);
+                statement.setDate(2, java.sql.Date.valueOf(fechaEntrada));
+                statement.setDate(3, java.sql.Date.valueOf(fechaSalida));
+                statement.executeUpdate();
+                System.out.println("Reserva realizada para la habitación con ID " + roomId + " desde " + fechaEntrada + " hasta " + fechaSalida);
+            }
+        } else {
+            System.out.println("La habitación no está disponible para las fechas seleccionadas.");
+        }
+    } catch (SQLException ex) {
+        System.out.println("Error al realizar la reserva: " + ex.getMessage());
+        throw ex;
+    }
+}
 }

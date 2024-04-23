@@ -1,0 +1,36 @@
+Número de habitación: 1
+Tipo de habitación: buena
+Precio por noche: 345.0
+Detalles de las comodidades: crack
+ID del hotel: 77766
+
+Número de habitación: 1
+Tipo de habitación: buena
+Precio por noche: 345.0
+Detalles de las comodidades: crack
+ID del hotel: 77766
+
+Número de habitación: 1
+Tipo de habitación: buena
+Precio por noche: 345.0
+Detalles de las comodidades: crack
+ID del hotel: 77766
+
+Número de habitación: 1
+Tipo de habitación: buena
+Precio por noche: 345.0
+Detalles de las comodidades: crack
+ID del hotel: 77766
+
+Número de habitación: 1
+Tipo de habitación: buena
+Precio por noche: 345.0
+Detalles de las comodidades: crack
+ID del hotel: 77766
+
+Número de habitación: 1
+Tipo de habitación: buena
+Precio por noche: 345.0
+Detalles de las comodidades: crack
+ID del hotel: 77766
+
