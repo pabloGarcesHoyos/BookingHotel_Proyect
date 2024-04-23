@@ -17,7 +17,6 @@ import model.Room;
 public class ViewRooms extends javax.swing.JFrame {
 
     RoomController roomController;
-    VistaHotelesRegistrados vistaHotelesRegistrados;
 
     public ViewRooms() throws SQLException {
         initComponents();
@@ -25,12 +24,10 @@ public class ViewRooms extends javax.swing.JFrame {
         setDefaultCloseOperation(this.DISPOSE_ON_CLOSE);
 
         roomController = new RoomController();
-        vistaHotelesRegistrados = new VistaHotelesRegistrados();
 
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-        
 
-         tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblHabitaciones.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable1MouseClicked(evt);
             }
@@ -53,7 +50,7 @@ public class ViewRooms extends javax.swing.JFrame {
 
     public void mostrarHabitacionesDisponibles(List<Room> habitaciones, LocalDate fechaEntrada, LocalDate fechaSalida) {
         DefaultTableModel model = (DefaultTableModel) tblHabitaciones.getModel();
-        model.setRowCount(0); 
+        model.setRowCount(0);
 
         for (Room habitacion : habitaciones) {
             model.addRow(new Object[]{habitacion.getId(), habitacion.getHotelId(), fechaEntrada, fechaSalida});
@@ -64,6 +61,7 @@ public class ViewRooms extends javax.swing.JFrame {
     int selectedRow = tblHabitaciones.getSelectedRow();
     if (selectedRow != -1) {
         int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
+        int hotelId = (int) tblHabitaciones.getValueAt(selectedRow, 1); // Obtener el ID del hotel
         LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 2).toString());
         LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 3).toString());
 
@@ -71,7 +69,7 @@ public class ViewRooms extends javax.swing.JFrame {
             boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
             if (disponibilidad) {
                 txtId.setText(String.valueOf(roomId));
-                txtIdHotel.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 1)));
+                txtIdHotel.setText(String.valueOf(hotelId));
                 txtFechaEntrada.setText(fechaEntrada.toString());
                 txtFechaSalida.setText(fechaSalida.toString());
                 btnReservar.setVisible(true);
@@ -84,6 +82,7 @@ public class ViewRooms extends javax.swing.JFrame {
         }
     }
 }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -280,7 +279,7 @@ public class ViewRooms extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-    int selectedRow = tblHabitaciones.getSelectedRow();
+     int selectedRow = tblHabitaciones.getSelectedRow();
     if (selectedRow != -1) {
         int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
         LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 2).toString());
@@ -293,8 +292,14 @@ public class ViewRooms extends javax.swing.JFrame {
                 txtIdHotel.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 1)));
                 txtFechaEntrada.setText(fechaEntrada.toString());
                 txtFechaSalida.setText(fechaSalida.toString());
-                btnReservar.setVisible(true);
-                limpiarCampos();
+
+                // Aquí realizamos la reserva
+                roomController.reservarHabitacion(roomId, fechaEntrada, fechaSalida);
+
+                JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
+
+                // Ocultamos el botón después de reservar
+                btnReservar.setVisible(false);
             } else {
                 btnReservar.setVisible(false);
                 JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");

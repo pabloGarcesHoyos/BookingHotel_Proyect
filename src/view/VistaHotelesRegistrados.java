@@ -458,8 +458,8 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         ViewRooms viewRooms = new ViewRooms();
         viewRooms.mostrarHabitacionesDisponibles(habitacionesDisponibles, fechaEntrada, fechaSalida);
         viewRooms.setVisible(true);
+        this.dispose();
 
-        // Limpiar el campo de ID del hotel
         txtId.setText("");
     } catch (NullPointerException ex) {
         JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrada en el calendario.");
