@@ -33,6 +33,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         rooms = new ViewRooms();
 
         llenarTablaHoteles();
+        this.dispose();
 
         tblHoteles.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
