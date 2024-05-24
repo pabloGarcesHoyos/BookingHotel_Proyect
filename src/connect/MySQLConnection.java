@@ -18,22 +18,22 @@ public class MySQLConnection {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // Nombre de la base de datos
-    private static final String DATABASE = "bd_controlhotel";
+    private static final String DATABASE = "bq2qkjgx0znctd3v38ae";
 
     // Host
-    private static final String HOSTNAME = "localhost";
+    private static final String HOSTNAME = "bq2qkjgx0znctd3v38ae-mysql.services.clever-cloud.com";
 
     // Puerto
-    private static final String PORT = "3306";
+    private static final String PORT = "21400";
 
     // Ruta de nuestra base de datos (desactivamos el uso de SSL con "?useSSL=false")
     private static final String URL = "jdbc:mysql://" + HOSTNAME + ":" + PORT + "/" + DATABASE + "?useSSL=false";
 
     // Nombre de usuario
-    private static final String USERNAME = "root";
+    private static final String USERNAME = "unont5teuxixhhrm";
 
     // Clave de usuario
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "PgLyGyfm7FpN0WGzzs5";
 
     /**
      * Este método se encarga de establecer la conexión con la base de datos.
