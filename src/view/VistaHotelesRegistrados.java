@@ -81,16 +81,16 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             card.setLayout(new BorderLayout());  // Establece el layout de la tarjeta
 
             // Crea un JLabel para el título de la tarjeta y añádelo al JPanel
-            JLabel title = new JLabel("Nombre " + (hotelController.getAllHotels().get(i).getName() + 1));
+            JLabel title = new JLabel("Nombre " + (hotelController.getAllHotels().get(i).getName()));
             title.setFont(new Font("Arial", Font.BOLD, 14));  // Establece la fuente del título
             card.add(title, BorderLayout.NORTH);
 
             // Crea un JLabel para el contenido de la tarjeta y añádelo al JPanel
-            JLabel content = new JLabel("Contenido de la tarjeta " + (i + 1));
+            JLabel content = new JLabel("Direccion " + (hotelController.getAllHotels().get(i).getAddress()));
             card.add(content, BorderLayout.CENTER);
 
             // Crea un JTextField para el campo de texto adicional y añádelo al JPanel
-            JLabel textField = new JLabel("Texto adicional " + (i + 1));
+            JLabel textField = new JLabel("Clasificacion " + (hotelController.getAllHotels().get(i).getClassification()));
             card.add(textField, BorderLayout.SOUTH);
 
             // Crea una variable final que contenga el valor de i
