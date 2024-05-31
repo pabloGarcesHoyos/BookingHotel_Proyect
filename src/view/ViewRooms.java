@@ -4,9 +4,23 @@
  */
 package view;
 
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import controller.RoomController;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -94,8 +108,6 @@ public class ViewRooms extends javax.swing.JFrame {
             }
         }
     }
-
-
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -314,49 +326,142 @@ public class ViewRooms extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBoxMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem2ActionPerformed
-        
+
         try {
             VistaHotelesRegistrados hoteles = new VistaHotelesRegistrados();
             hoteles.setVisible(true);
         } catch (SQLException ex) {
             java.util.logging.Logger.getLogger(ViewRooms.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_jCheckBoxMenuItem2ActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-    int selectedRow = tblHabitaciones.getSelectedRow();
-    if (selectedRow != -1) {
-        int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
-        LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 5).toString());
-        LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 6).toString());
+        int selectedRow = tblHabitaciones.getSelectedRow();
+        if (selectedRow != -1) {
+            int roomId = (int) tblHabitaciones.getValueAt(selectedRow, 0);
+            LocalDate fechaEntrada = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 5).toString());
+            LocalDate fechaSalida = LocalDate.parse(tblHabitaciones.getValueAt(selectedRow, 6).toString());
 
-        try {
-            boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
-            if (disponibilidad) {
-                txtId.setText(String.valueOf(roomId));
-                txtRoomNumber.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 1)));
-                txtRoomType.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 2)));
-                txtPricePerNight.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 3)));
-                txtAmenitiesDetails.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 4)));
-                txtFechaEntrada.setText(fechaEntrada.toString());
-                txtFechaSalida.setText(fechaSalida.toString());
+            try {
+                boolean disponibilidad = roomController.verificarDisponibilidad(roomId, fechaEntrada, fechaSalida);
+                if (disponibilidad) {
+                    txtId.setText(String.valueOf(roomId));
+                    txtRoomNumber.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 1)));
+                    txtRoomType.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 2)));
+                    txtPricePerNight.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 3)));
+                    txtAmenitiesDetails.setText(String.valueOf(tblHabitaciones.getValueAt(selectedRow, 4)));
+                    txtFechaEntrada.setText(fechaEntrada.toString());
+                    txtFechaSalida.setText(fechaSalida.toString());
 
-                roomController.reservarHabitacion(roomId, fechaEntrada, fechaSalida);
+                    roomController.reservarHabitacion(roomId, fechaEntrada, fechaSalida);
+                    LocalDateTime today = LocalDateTime.now();
+                    ///////////////////////pdf
+                    String dest = "C:\\Users\\Usuario\\Desktop\\Proyectosdisenio\\New BookingHotel_Proyect2\\BookingHotel_Proyect\\reporte_ventas_itext5.pdf";
 
-                JOptionPane.showMessageDialog(this, "Reserva realizada con éxito.");
+                    Document document = new Document();
 
-                btnReservar.setVisible(false);
-            } else {
-                btnReservar.setVisible(false);
-                JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+                    try {
+                        PdfWriter.getInstance(document, new FileOutputStream(dest));
+                        document.open();
+
+                        // Título del documento
+                        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18);
+                        Paragraph title = new Paragraph("Factura de reserva", titleFont);
+                        title.setAlignment(Element.ALIGN_CENTER);
+                        document.add(title);
+
+                        // Información del autor y fecha
+                        Font authorFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+                        Paragraph author = new Paragraph("Autores: Juan Pablo - Jefferson Orozco", authorFont);
+                        author.setAlignment(Element.ALIGN_LEFT);
+                        author.setSpacingBefore(10);
+                        document.add(author);
+
+                        Paragraph date = new Paragraph("Fecha: "+today, authorFont);
+                        date.setAlignment(Element.ALIGN_LEFT);
+                        date.setSpacingAfter(20);
+                        document.add(date);
+
+                        // Introducción
+                        Font sectionFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+                        Paragraph introductionTitle = new Paragraph("Estimado usuario", sectionFont);
+                        document.add(introductionTitle);
+
+                        Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 12);
+                        Paragraph introduction = new Paragraph("Se genera a travez de este medio su factura "
+                                + "correspondiente a su reversa que realizó por medio del aplicativo booking hotal con nosotros "
+                                + "por lo cual se realiza dicho pago.", bodyFont);
+                        introduction.setSpacingAfter(20);
+                        document.add(introduction);
+
+                        // Resumen de Ventas Mensuales
+                        Paragraph salesSummaryTitle = new Paragraph("Resumen de la reserva", sectionFont);
+                        salesSummaryTitle.setSpacingBefore(10);
+                        document.add(salesSummaryTitle);
+
+                        // Tabla de ventas
+                        PdfPTable table = new PdfPTable(4);
+                        table.setWidthPercentage(100);
+                        table.setSpacingBefore(10f);
+                        table.setSpacingAfter(10f);
+
+                        PdfPCell cell;
+
+                        // Encabezados de la tabla
+                        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+                        cell = new PdfPCell(new Phrase("Numero habitacion", headerFont));
+                        cell.setBackgroundColor(new BaseColor(240, 240, 240));
+                        table.addCell(cell);
+
+                        cell = new PdfPCell(new Phrase("Tipo habitacion", headerFont));
+                        cell.setBackgroundColor(new BaseColor(240, 240, 240));
+                        table.addCell(cell);
+
+                        cell = new PdfPCell(new Phrase("Precio por habitacion", headerFont));
+                        cell.setBackgroundColor(new BaseColor(240, 240, 240));
+                        table.addCell(cell);
+
+                        cell = new PdfPCell(new Phrase("Detalles de amenidades", headerFont));
+                        cell.setBackgroundColor(new BaseColor(240, 240, 240));
+                        table.addCell(cell);
+
+                        // Datos de la tabla
+                        table.addCell(txtRoomNumber.getText());
+                        table.addCell(txtRoomType.getText());
+                        table.addCell(txtPricePerNight.getText());
+                        table.addCell(txtAmenitiesDetails.getText());
+
+                        document.add(table);
+
+                        // Conclusión
+                        Paragraph conclusionTitle = new Paragraph("Observacion", sectionFont);
+                        conclusionTitle.setSpacingBefore(20);
+                        document.add(conclusionTitle);
+
+                        Paragraph conclusion = new Paragraph("Si tienes quejas o reclamos "
+                                + "no olvides contactarnos a travez de nuestros canales de atencion "
+                                + "Gracias por su compra!", bodyFont);
+                        document.add(conclusion);
+
+                        document.close();
+                        System.out.println("PDF creado con éxito.");
+                    } catch (DocumentException | FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    JOptionPane.showMessageDialog(this, "Reserva realizada con éxito. Su factura se ha generado correctamente :)");
+
+                    btnReservar.setVisible(false);
+                } else {
+                    btnReservar.setVisible(false);
+                    JOptionPane.showMessageDialog(this, "La habitación no está disponible para las fechas seleccionadas.");
+                }
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
             }
-            
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error al verificar la disponibilidad de la habitación: " + ex.getMessage());
         }
-    }
-
 
 
     }//GEN-LAST:event_btnReservarActionPerformed
@@ -371,18 +476,20 @@ public class ViewRooms extends javax.swing.JFrame {
     public JTable getTblHabitaciones() {
         return tblHabitaciones;
     }
-private void limpiarCampos() {
+
+    private void limpiarCampos() {
         txtRoomNumber.setText("");
         txtRoomType.setText("");
         txtFechaEntrada.setText("");
         txtFechaSalida.setText("");
     }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-        */
+         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
