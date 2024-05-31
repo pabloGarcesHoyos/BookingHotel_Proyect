@@ -3,6 +3,14 @@ package view;
 import com.toedter.calendar.JDateChooser;
 import controller.HotelController;
 import controller.RoomController;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,7 +18,16 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -33,7 +50,6 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         rooms = new ViewRooms();
 
         llenarTablaHoteles();
-        
 
         tblHoteles.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -45,6 +61,111 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         btnReservar.setVisible(true);
         jDateChooser1.setDate(new java.util.Date());
         jDateChooser2.setDate(new java.util.Date());
+
+        ///////////////////menu card/////////////////////////
+        // Obtén el número de registros de la base de datos
+        int numRegistros = hotelController.getAllHotels().size();
+
+        // Crea un JPanel para contener las tarjetas
+        JPanel cardsPanel = new JPanel();
+        cardsPanel.setLayout(new GridLayout(numRegistros / 3 + 1, 3, 10, 10));
+
+        pl_hotelCardMenu.setLayout(new GridLayout(numRegistros / 3 + 1, 3, 10, 10));
+
+        // Crea las tarjetas dinámicamente y añádelas al JPanel
+        for (int i = 0; i < numRegistros; i++) {
+            // Crea un nuevo JPanel para la tarjeta
+            JPanel card = new JPanel();
+            card.setBorder(new EmptyBorder(10, 10, 10, 10));  // Agrega un borde vacío para simular un padding
+            card.setBackground(Color.WHITE);  // Establece el color de fondo de la tarjeta
+            card.setLayout(new BorderLayout());  // Establece el layout de la tarjeta
+
+            // Crea un JLabel para el título de la tarjeta y añádelo al JPanel
+            JLabel title = new JLabel("Nombre " + (hotelController.getAllHotels().get(i).getName() + 1));
+            title.setFont(new Font("Arial", Font.BOLD, 14));  // Establece la fuente del título
+            card.add(title, BorderLayout.NORTH);
+
+            // Crea un JLabel para el contenido de la tarjeta y añádelo al JPanel
+            JLabel content = new JLabel("Contenido de la tarjeta " + (i + 1));
+            card.add(content, BorderLayout.CENTER);
+
+            // Crea un JTextField para el campo de texto adicional y añádelo al JPanel
+            JLabel textField = new JLabel("Texto adicional " + (i + 1));
+            card.add(textField, BorderLayout.SOUTH);
+
+            // Crea una variable final que contenga el valor de i
+            final int index = i;
+
+            // Crea un borde compuesto con un borde vacío y un borde de línea
+            Border padding = new EmptyBorder(10, 10, 10, 10);
+            Border borderLine = BorderFactory.createLineBorder(Color.BLACK, 1);
+            Border border = new CompoundBorder(borderLine, padding);
+            card.setBorder(border);
+
+            // Agrega un MouseListener al JPanel
+            card.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    // Este código se ejecutará cuando se haga clic en el JPanel
+                    System.out.println("Se hizo clic en la tarjeta " + (index + 1));
+                    try {
+                        txtId.setText(String.valueOf(hotelController.getAllHotels().get(index).getId()));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VistaHotelesRegistrados.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        txtAdreess.setText(hotelController.getAllHotels().get(index).getAddress());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VistaHotelesRegistrados.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        txtCiudad.setText(hotelController.getAllHotels().get(index).getAddress());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VistaHotelesRegistrados.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    try {
+                        txtClasificacion.setText(hotelController.getAllHotels().get(index).getClassification());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(VistaHotelesRegistrados.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    // Cambia el color del borde a azul cuando el ratón entra en el JPanel
+                    Border blueBorder = BorderFactory.createLineBorder(Color.BLUE, 1);
+                    Border compound = new CompoundBorder(blueBorder, padding);
+                    card.setBorder(compound);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    // Cambia el color del borde al color inicial cuando el ratón sale del JPanel
+                    card.setBorder(border);
+                }
+            });
+
+            // Cambia el cursor a un puntero de mano cuando el ratón está sobre el JPanel
+            card.setCursor(Cursor.getDefaultCursor().getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            cardsPanel.add(card);
+        }
+
+        // Crea un JScrollPane y añade el JPanel a él
+        JScrollPane scrollPane = new JScrollPane(cardsPanel);
+        scrollPane.setPreferredSize(new Dimension(pl_hotelCardMenu.getWidth(), pl_hotelCardMenu.getHeight()));
+
+        // Añade el JScrollPane a tu panel principal
+        pl_hotelCardMenu.setLayout(new BorderLayout());
+        pl_hotelCardMenu.add(scrollPane, BorderLayout.CENTER);
+
+        // Actualiza el JPanel para mostrar los nuevos botones
+        pl_hotelCardMenu.revalidate();
+        pl_hotelCardMenu.repaint();
+
+        //////////////////////////////////////////////////////end menu card
     }
 
     private void llenarTablaHoteles() {
@@ -86,13 +207,13 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             for (Room room : rooms) {
                 model.addRow(new Object[]{room.getId(), room.getRoomNumber(), room.getRoomType(), room.getPricePerNight(), room.getAmenitiesDetails(), room.getHotelId()});
             }
-            
+
             escribirDatosEnArchivo(rooms);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Error al cargar las habitaciones del hotel: " + ex.getMessage());
         }
     }
-    
+
     private void escribirDatosEnArchivo(List<Room> rooms) {
         for (Room room : rooms) {
             String nombreArchivo = "habitacion_" + room.getRoomNumber() + ".txt";
@@ -107,9 +228,9 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error al escribir en el archivo: " + ex.getMessage());
             }
         }
-        
+
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -144,6 +265,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
+        pl_hotelCardMenu = new javax.swing.JPanel();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jCheckBoxMenuItem1 = new javax.swing.JCheckBoxMenuItem();
@@ -290,7 +412,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 109, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
                     .addComponent(jLabel13))
@@ -321,6 +443,17 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                 .addGap(28, 28, 28))
         );
 
+        javax.swing.GroupLayout pl_hotelCardMenuLayout = new javax.swing.GroupLayout(pl_hotelCardMenu);
+        pl_hotelCardMenu.setLayout(pl_hotelCardMenuLayout);
+        pl_hotelCardMenuLayout.setHorizontalGroup(
+            pl_hotelCardMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        pl_hotelCardMenuLayout.setVerticalGroup(
+            pl_hotelCardMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 226, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -330,10 +463,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(77, 77, 77)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -345,9 +475,11 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                                 .addGap(50, 50, 50)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel3)
-                                    .addComponent(txtFiltroComodidades, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 184, Short.MAX_VALUE)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(txtFiltroComodidades, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 602, Short.MAX_VALUE)
+                            .addComponent(pl_hotelCardMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -367,7 +499,9 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
                             .addComponent(txtFiltroClasificacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtFiltroComodidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(48, 48, 48)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(pl_hotelCardMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -400,9 +534,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -413,53 +545,57 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     }//GEN-LAST:event_txtIdActionPerformed
 
     private void btnReservarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservarActionPerformed
-    try {
-        LocalDate fechaActual = LocalDate.now();
-        
-        LocalDate fechaEntrada = jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        if (fechaEntrada.isBefore(fechaActual)) {
-            JOptionPane.showMessageDialog(this, "No se puede reservar para una fecha que ya ha pasado.");
-            return;
-        }
-        
-        LocalDate fechaSalida = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        if (fechaSalida.isBefore(fechaEntrada)) {
-            JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser menor a la fecha de entrada.");
-            return;
-        }
-        
-        if (fechaSalida.isBefore(fechaActual)) {
-            JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser una fecha que ya ha pasado.");
-            return;
-        }
-        
-        int selectedRow = tblHoteles.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Debe seleccionar un hotel para realizar la reserva.");
-            return;
-        }
-        
-        int hotelId = (int) tblHoteles.getValueAt(selectedRow, 0);
-        
-        List<Room> habitacionesDisponibles = roomController.getAvailableRoomsForHotel(hotelId);
-        
-        if (habitacionesDisponibles.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No hay habitaciones disponibles en el hotel para las fechas seleccionadas.");
-            return;
-        }
-        
-        ViewRooms viewRooms = new ViewRooms();
-        viewRooms.mostrarHabitacionesDisponibles(habitacionesDisponibles, fechaEntrada, fechaSalida);
-        viewRooms.setVisible(true);
-        this.dispose();
+        try {
+            LocalDate fechaActual = LocalDate.now();
 
-        txtId.setText("");
-    } catch (NullPointerException ex) {
-        JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrada en el calendario.");
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
-    }
-    
+            LocalDate fechaEntrada = jDateChooser2.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (fechaEntrada.isBefore(fechaActual)) {
+                JOptionPane.showMessageDialog(this, "No se puede reservar para una fecha que ya ha pasado.");
+                return;
+            }
+
+            LocalDate fechaSalida = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (fechaSalida.isBefore(fechaEntrada)) {
+                JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser menor a la fecha de entrada.");
+                return;
+            }
+
+            if (fechaSalida.isBefore(fechaActual)) {
+                JOptionPane.showMessageDialog(this, "La fecha de salida no puede ser una fecha que ya ha pasado.");
+                return;
+            }
+
+//            int selectedRow = tblHoteles.getSelectedRow();
+//        if (selectedRow == -1) {
+//            JOptionPane.showMessageDialog(this, "Debe seleccionar un hotel para realizar la reserva.");
+//            return;
+//        }
+            if (txtId == null) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un hotel para realizar la reserva.");
+            }
+
+//            int hotelId = (int) tblHoteles.getValueAt(selectedRow, 0);
+            int hotelId= Integer.parseInt(txtId.getText());
+
+            List<Room> habitacionesDisponibles = roomController.getAvailableRoomsForHotel(hotelId);
+
+            if (habitacionesDisponibles.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay habitaciones disponibles en el hotel para las fechas seleccionadas.");
+                return;
+            }
+
+            ViewRooms viewRooms = new ViewRooms();
+            viewRooms.mostrarHabitacionesDisponibles(habitacionesDisponibles, fechaEntrada, fechaSalida);
+            viewRooms.setVisible(true);
+            this.dispose();
+
+            txtId.setText("");
+        } catch (NullPointerException ex) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de entrada en el calendario.");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al realizar la reserva: " + ex.getMessage());
+        }
+
     }//GEN-LAST:event_btnReservarActionPerformed
 
     private void txtAdreessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAdreessActionPerformed
@@ -467,7 +603,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAdreessActionPerformed
 
     private void jCheckBoxMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxMenuItem1ActionPerformed
-    
+
     }//GEN-LAST:event_jCheckBoxMenuItem1ActionPerformed
 
     public JDateChooser getjDateChooser1() {
@@ -505,6 +641,7 @@ public class VistaHotelesRegistrados extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pl_hotelCardMenu;
     private javax.swing.JTable tblHoteles;
     private javax.swing.JTextField txtAdreess;
     private javax.swing.JTextField txtCiudad;

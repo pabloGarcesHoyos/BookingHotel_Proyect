@@ -34,3 +34,15 @@ Precio por noche: 1.0
 Detalles de las comodidades: todas
 ID del hotel: 1
 
+Número de habitación: 151
+Tipo de habitación: Individual
+Precio por noche: 25.0
+Detalles de las comodidades: Todas
+ID del hotel: 2
+
+Número de habitación: 151
+Tipo de habitación: Individual
+Precio por noche: 25.0
+Detalles de las comodidades: Todas
+ID del hotel: 2
+
