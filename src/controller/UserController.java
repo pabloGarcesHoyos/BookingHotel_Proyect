@@ -9,20 +9,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import connect.MySQLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import model.User;
 
 public class UserController {
+
+    ArrayList<User> ListUser;
 
     public UserController() {
     }
 
     public void createUsers(String userName, String email, String password, String contactDetails, String rol) throws SQLException {
         String createSQL = "INSERT INTO users(userName, email, password, contactDetails, rol) VALUES(?, ?, ?, ?, ?)";
-        try (Connection conn = MySQLConnection.conectarMySQL();
-             PreparedStatement statement = conn.prepareStatement(createSQL)) {
+        try (Connection conn = MySQLConnection.conectarMySQL(); PreparedStatement statement = conn.prepareStatement(createSQL)) {
             statement.setString(1, userName);
             statement.setString(2, email);
-            statement.setString(3, password); 
+            statement.setString(3, password);
             statement.setString(4, contactDetails);
             statement.setString(5, rol);
 
@@ -33,30 +36,48 @@ public class UserController {
 
     public User readUsers(int id) throws SQLException {
         String readSQL = "SELECT * FROM users WHERE id = ?";
-        try (Connection conn = MySQLConnection.conectarMySQL();
-             PreparedStatement statement = conn.prepareStatement(readSQL)) {
+        try (Connection conn = MySQLConnection.conectarMySQL(); PreparedStatement statement = conn.prepareStatement(readSQL)) {
             statement.setInt(1, id);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return new User(
-                    rs.getInt("id"),
-                    rs.getString("userName"),
-                    rs.getString("email"),
-                    rs.getString("password"), 
-                    rs.getString("contactDetails")
+                        rs.getInt("id"),
+                        rs.getString("userName"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("contactDetails")
                 );
             }
         }
         return null;
     }
 
+    public List<User> getAllUsers() {
+        String readSQL = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+        try (Connection conn = MySQLConnection.conectarMySQL(); PreparedStatement statement = conn.prepareStatement(readSQL)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("id"),
+                        rs.getString("userName"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("contactDetails"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     public void updateUsers(int id, String userName, String email, String password, String contactDetails) throws SQLException {
         String updateSQL = "UPDATE users SET userName = ?, email = ?, password = SHA2(?, 256), contactDetails = ? WHERE id = ?";
-        try (Connection conn = MySQLConnection.conectarMySQL();
-             PreparedStatement statement = conn.prepareStatement(updateSQL)) {
+        try (Connection conn = MySQLConnection.conectarMySQL(); PreparedStatement statement = conn.prepareStatement(updateSQL)) {
             statement.setString(1, userName);
             statement.setString(2, email);
-            statement.setString(3, password); 
+            statement.setString(3, password);
             statement.setString(4, contactDetails);
             statement.setInt(5, id);
 
@@ -66,8 +87,7 @@ public class UserController {
 
     public void deleteUsers(int id) throws SQLException {
         String deleteSQL = "DELETE FROM users WHERE id = ?";
-        try (Connection conn = MySQLConnection.conectarMySQL();
-             PreparedStatement statement = conn.prepareStatement(deleteSQL)) {
+        try (Connection conn = MySQLConnection.conectarMySQL(); PreparedStatement statement = conn.prepareStatement(deleteSQL)) {
             statement.setInt(1, id);
             System.out.println(statement.executeUpdate() > 0 ? "Eliminación exitosa" : "No se pudo eliminar el usuario");
         }
@@ -75,18 +95,17 @@ public class UserController {
 
     public static User obtenerUsuarioPorCredenciales(String usuario, String contraseña) throws SQLException {
         String query = "SELECT * FROM users WHERE userName = ? AND password = SHA2(?, 256)";
-        try (Connection conn = MySQLConnection.conectarMySQL();
-             PreparedStatement statement = conn.prepareStatement(query)) {
+        try (Connection conn = MySQLConnection.conectarMySQL(); PreparedStatement statement = conn.prepareStatement(query)) {
             statement.setString(1, usuario);
             statement.setString(2, contraseña);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return new User(
-                    resultSet.getInt("id"),
-                    resultSet.getString("userName"),
-                    resultSet.getString("email"),
-                    resultSet.getString("password"), 
-                    resultSet.getString("contactDetails")
+                        resultSet.getInt("id"),
+                        resultSet.getString("userName"),
+                        resultSet.getString("email"),
+                        resultSet.getString("password"),
+                        resultSet.getString("contactDetails")
                 );
             }
         }

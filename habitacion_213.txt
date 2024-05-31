@@ -1,0 +1,24 @@
+Número de habitación: 213
+Tipo de habitación: Individual
+Precio por noche: 50.0
+Detalles de las comodidades: Todas
+ID del hotel: 1
+
+Número de habitación: 213
+Tipo de habitación: Individual
+Precio por noche: 50.0
+Detalles de las comodidades: Todas
+ID del hotel: 1
+
+Número de habitación: 213
+Tipo de habitación: Individual
+Precio por noche: 50.0
+Detalles de las comodidades: Todas
+ID del hotel: 1
+
+Número de habitación: 213
+Tipo de habitación: Individual
+Precio por noche: 50.0
+Detalles de las comodidades: Todas
+ID del hotel: 1
+
